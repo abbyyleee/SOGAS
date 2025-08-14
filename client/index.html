@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+
+    <!--Custom Tailwind Colors-->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'cobalt-blue': '#0047AB',
+              'gray'       : '#e5e4e2',
+              'stone-gray': '#d3d3d3',
+              'deep-gray': '#7D7C7C',
+              'pure-black': '#000000',
+              'char-blue': '#1e2f5c',
+              'dark-navy': '#011f4b',
+              'deep-blue': '#03396c',
+              'reg-blue': '#005b96',
+              'soft-blue': '#6497b1',
+              'light-blue': '#b3cde0',
+              'rust':       '#FFDE00',
+             
+            },
+            keyframes: {
+              fadeUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)'},
+                '100%': { opacity: '1', transform: 'translateY(0)'},
+              },
+              fadeLeft: {
+                '0%': { opacity: '0', transform: 'translateX(-50px)' },
+                '100%': { opacity: '1', transform: 'translateX(0)' },
+              },
+              fadeRight: {
+                '0%': { opacity: '0', transform: 'translateX(50px)' },
+                '100%': { opacity: '1', transform: 'translateX(0)' },
+              },
+              zoomIn: {
+                '0%': { transform: 'scale(0.9)' },
+                '100%': { transform: 'scale(1)' },
+              },
+            },
+            animation: {
+              'fade-up': 'fadeUp 2s ease-out forwards',
+              'fade-left': 'fadeLeft 1.2s ease-out forwards',
+              'fade-right': 'fadeRight 1.2s ease-out forwards',
+              'zoom-in': 'zoomIn 3s ease-out forwards',
+            },
+            fontFamily: {
+              signature: ['SignatureFont', 'cursive'],
+            },
+          },
+        },
+      };
+    </script>
+
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <div class="hidden animate-fade-up animate-fade-left animate-fade-right animate-zoom-in"></div>
+  </body>
+</html>
