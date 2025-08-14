@@ -89,7 +89,7 @@ app.post("/api/contact", async (req, res) => {
 
     // 2) Build email content
     const lines = [
-      `New contact form submission from Southern Gas Services website`,
+      `New contact form submission from Southern Gas Services Website`,
       "",
       `Name:    ${data.name}`,
       `Email:   ${data.email}`,
@@ -111,12 +111,18 @@ app.post("/api/contact", async (req, res) => {
     }
 
     const info = await transporter.sendMail({
-      from: EMAIL_FROM,       // display name + no-reply address (your domain)
+      from: EMAIL_FROM,       // display name
       to: EMAIL_TO,           // company inbox
-      replyTo: data.email,    // so hitting Reply goes to the sender
+      replyTo: data.email,    // hitting Reply goes to the sender
       subject: data.subject || `New message from ${data.name}`,
       text: lines.join("\n"),
       html: lines.map((l) => (l === "" ? "<br/>" : `<div>${escapeHtml(l)}</div>`)).join(""),
+
+      //Force MAIN FROM to match mailbox
+      envelope: {
+        from: SMTP_USER,
+        to: EMAIL_TO
+      }
     });
 
     // 4) Respond success
