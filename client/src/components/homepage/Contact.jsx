@@ -1,7 +1,92 @@
 // src/components/homepage/Contact.jsx
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 export default function Contact() {
+  // ---- Form State ----
+  const [form, setForm] = useState({
+    name: "",
+    company: "",
+    phone: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  // Status Banner: idle | loading | success | error
+  const [status, setStatus] = useState({ type: "idle", message: "" });
+
+  function onChange(e) {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  }
+
+  function validate() {
+    const errors = {};
+    if (!form.name.trim()) errors.name = "Name is required";
+    if (!form.email.trim()) errors.email = "Email is required";
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      errors.email = "Enter a valid email";
+    if (!form.message.trim()) errors.message = "Message is required";
+    if (form.company && form.company.length > 150) errors.company = "Company too long";
+    if (form.subject && form.subject.length > 150) errors.subject = "Subject too long";
+    if (form.phone && form.phone.length > 30) errors.phone = "Phone too long";
+    if (form.message && form.message.length > 5000) errors.message = "Message too long";
+    return errors;
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+
+    const errors = validate();
+    if (Object.keys(errors).length) {
+      const first =
+        errors.name || errors.email || errors.message || Object.values(errors)[0];
+      setStatus({ type: "error", message: first });
+      return;
+    }
+
+    setStatus({ type: "loading", message: "Sending…" });
+
+    try {
+      const res = await fetch("http://localhost:4000/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+          // Optional Fields
+          company: form.company.trim() || undefined,
+          phone: form.phone.trim() || undefined,
+          subject: form.subject.trim() || undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        const msg =
+          (data && data.errors && Object.values(data.errors)[0]) ||
+          (data && data.message) ||
+          "Unable to send your message.";
+        setStatus({ type: "error", message: msg });
+        return;
+      }
+
+      setStatus({ type: "success", message: "Message sent. We’ll be in touch!" });
+      setForm({
+        name: "",
+        company: "",
+        phone: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch {
+      setStatus({ type: "error", message: "Network error. Please try again." });
+    }
+  }
+
   return (
     <section
       id="contact"
@@ -51,11 +136,11 @@ export default function Contact() {
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >
-                    <path d="M20 4H4a2 2 0 0 0-2 2v.4l10 6.25L22 6.4V6a2 2 0 0 0-2-2Zm2 5.2-9.2 5.75a2 2 0 0 1-2.1 0L1.5 9.2V18a2 2 0 0 0 2 2h17a2 2 0 0 0 2-2V9.2Z" />
+                    <path d="M20 4H4a2 2 0 0 0-2 2v.4l10 6.25L22 6.4V6a2 2 0 0 0-2-2Zm2 5.2-9.2 5.75a2 2 0 0 1-2.1 0L1.5 9.2V18a2 2 0 0 0 2 2h17a 2 2 0 0 0 2-2V9.2Z" />
                   </svg>
                 }
               >
-                <span className="select-all">notices@sogasservices.com</span>
+                <span className="select-all">notices@sogassservices.com</span>
               </InfoItem>
 
               <InfoItem
@@ -86,19 +171,86 @@ export default function Contact() {
             </h3>
             <span className="block h-1 w-20 rounded-full bg-rust mt-3" />
             <p className="mt-4 text-dark-navy font-semibold">
-              Fill out the form and we’ll respond quickly.
+              Fill out the form and we’ll respond quickly. <br/>
+              * Marks Required Fields
             </p>
 
-            <form className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-dark-navy">
-              <Field id="name" label="Name" placeholder="Name" />
-              <Field id="company" label="Company" placeholder="Company" />
-              <Field id="phone" label="Phone Number" placeholder="Phone Number" />
-              <Field id="email" type="email" label="Email" placeholder="Email" />
+            {/* Status banner */}
+            {status.type !== "idle" && (
+              <div
+                className={
+                  "mt-4 rounded-md border p-3 text-sm " +
+                  (status.type === "loading"
+                    ? "border-reg-blue/40 bg-white/60"
+                    : status.type === "success"
+                    ? "border-green-600/30 bg-green-50 text-green-700"
+                    : "border-red-600/30 bg-red-50 text-red-700")
+                }
+              >
+                {status.message}
+              </div>
+            )}
+
+            <form
+              onSubmit={onSubmit}
+              className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-dark-navy"
+            >
+              <Field
+                id="name"
+                name="name"
+                label="Name"
+                placeholder="Name"
+                value={form.name}
+                onChange={onChange}
+                required
+              />
+              <Field
+                id="company"
+                name="company"
+                label="Company"
+                placeholder="Company"
+                value={form.company}
+                onChange={onChange}
+              />
+              <Field
+                id="phone"
+                name="phone"
+                label="Phone Number"
+                placeholder="Phone Number"
+                value={form.phone}
+                onChange={onChange}
+              />
+              <Field
+                id="email"
+                name="email"
+                type="email"
+                label="Email"
+                placeholder="Email"
+                value={form.email}
+                onChange={onChange}
+                required
+              />
               <div className="md:col-span-2">
-                <Field id="subject" label="Subject" placeholder="Subject" />
+                <Field
+                  id="subject"
+                  name="subject"
+                  label="Subject"
+                  placeholder="Subject"
+                  value={form.subject}
+                  onChange={onChange}
+                />
               </div>
               <div className="md:col-span-2">
-                <Textarea id="message" label="Message" placeholder="Message" rows={5} />
+                <Textarea
+                  id="message"
+                  name="message"
+                  label="Message"
+                  placeholder="Message"
+                  rows={5}
+                  value={form.message}
+                  onChange={onChange}
+                  required
+                />
               </div>
 
               <div className="md:col-span-2 mt-2 flex justify-end">
@@ -106,9 +258,10 @@ export default function Contact() {
                   whileHover={{ y: -1 }}
                   whileTap={{ y: 0 }}
                   type="submit"
-                  className="inline-flex items-center gap-2 rounded-md bg-rust px-6 py-3 font-semibold text-dark-navy shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-rust/60"
+                  disabled={status.type === "loading"}
+                  className="inline-flex items-center gap-2 rounded-md bg-rust px-6 py-3 font-semibold text-dark-navy shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-rust/60 disabled:opacity-60"
                 >
-                  Send
+                  {status.type === "loading" ? "Sending…" : "Send"}
                   <svg
                     aria-hidden="true"
                     className="h-4 w-4"
@@ -127,33 +280,41 @@ export default function Contact() {
   );
 }
 
-/* ---------- UI primitives ---------- */
-function Field({ id, label, placeholder, type = "text" }) {
+/* ---------- UI Primitives  ---------- */
+function Field({ id, name, label, placeholder, type = "text", value, onChange, required }) {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-sm font-semibold text-dark-navy">
-        {label}
+        {label} {required ? "*" : null}
       </label>
       <input
         id={id}
+        name={name || id}
         type={type}
         placeholder={placeholder}
+        value={value ?? ""}
+        onChange={onChange}
+        required={required}
         className="w-full rounded-md border border-light-blue/60 bg-white p-3 placeholder:text-deep-blue/50 outline-none focus:ring-2 focus:ring-rust/60 focus:border-rust/60 transition"
       />
     </div>
   );
 }
 
-function Textarea({ id, label, placeholder, rows = 5 }) {
+function Textarea({ id, name, label, placeholder, rows = 5, value, onChange, required }) {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-sm font-semibold text-dark-navy">
-        {label}
+        {label} {required ? "*" : null}
       </label>
       <textarea
         id={id}
+        name={name || id}
         rows={rows}
         placeholder={placeholder}
+        value={value ?? ""}
+        onChange={onChange}
+        required={required}
         className="w-full rounded-md border border-light-blue/60 bg-white p-3 placeholder:text-deep-blue/50 outline-none focus:ring-2 focus:ring-rust/60 focus:border-rust/60 resize-none transition"
       />
     </div>
