@@ -11,7 +11,7 @@ that handles contact form submissions and sends emails to the comapany inbox.
 
 ## Project Structure
 
-SOGAS/
+SOGAS/<br/>
 └─ southern-gas-services/<br/>
 ├─ client/ # Frontend (Vite + React)<br/>
 ├─ server/ # Backend (Node + Express)<br/>
@@ -21,14 +21,14 @@ SOGAS/
 
 ## Local Development
 
-**1. Frontend:**
+**1. Frontend:**<br/>
 cd client<br/>
 npm install<br/>
 npm run dev
 
 - Opens Vite dev server (default: http://localhost:5173)
 
-**2. Backend:**
+**2. Backend:**<br/>
 cd server<br/>
 npm install<br/>
 npm start<br/>
@@ -71,32 +71,32 @@ RATE_LIMIT_MAX=5
 Endpoint: POST /api/contact<br/>
 Content-Type: application/json
 
-Request Body:
-{
-"name": "Your Name", // required, 1–100 chars
-"email": "you@example.com", // required, valid email format
-"message": "Your message here", // required, 1–5000 chars
-"company": "Optional Co", // optional, up to 150 chars
-"phone": "optional", // optional, up to ~30 chars
-"subject": "optional" // optional, up to 150 chars
+Request Body:<br/>
+{<br/>
+"name": "Your Name", // required, 1–100 chars<br/>
+"email": "you@example.com", // required, valid email format<br/>
+"message": "Your message here", // required, 1–5000 chars<br/>
+"company": "Optional Co", // optional, up to 150 chars<br/>
+"phone": "optional", // optional, up to 30 chars<br/>
+"subject": "optional" // optional, up to 150 chars<br/>
 }
-Success (200)
+
+Success (200)<br/>
 { "success": true, "message": "Your message has been sent." }
 
-Validation Error (400)
-{
-"success": false,
-"errors": {
-"name": "Name is required",
-"email": "Please enter a valid email",
-"message": "Message is required"
-}
+Validation Error (400)<br/>
+{<br/>
+"success": false,<br/>
+"errors": {<br/>
+"name": "Name is required",<br/>
+"email": "Please enter a valid email",<br/>
+"message": "Message is required"}<br/>
 }
 
-Rate Limited (429)
+Rate Limited (429)<br/>
 { "success": false, "message": "Too many requests. Please try again later." }
 
-Server Error (500)
+Server Error (500)<br/>
 { "success": false, "message": "Unable to send your message right now. Please try again later." }
 
 ## Tech Stack
@@ -107,18 +107,18 @@ Server Error (500)
 
 ## Scripts
 
-Frontend (client)
-npm run dev - starts Vite dev server
-npm run build - production build
+**Frontend (client):**<br/>
+npm run dev - starts Vite dev server<br/>
+npm run build - production build</br>
 npm run preview - preview production build
 
-Backend (server)
-npm start - starts Express server
+**Backend (server):**<br/>
+npm start - starts Express server<br/>
 npm run dev - start with nodemon
 
 ## License
 
-© 2025 Abby Lee. All rights reserved.
+© 2025 Abby Lee. All rights reserved.<br/>
 This software is the intellectual property of Abby Lee and is licensed for use by Southern Gas Services.
 No part of this repository may be copied, modified, or distributed without explicit written permission from the copyright holder.
 
@@ -126,8 +126,8 @@ No part of this repository may be copied, modified, or distributed without expli
 
 For project inquiries or licensing requests, contact:
 
-Abby Lee
-Email: abbychrislee@gmail.com
+Abby Lee<br/>
+Email: abbychrislee@gmail.com<br/>
 GitHub: http://github.com/abbyyleee
 
-For Souther Gas Services business inquiries: notices@sogasservices.com
+For Southern Gas Services business inquiries: notices@sogasservices.com
