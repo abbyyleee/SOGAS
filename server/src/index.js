@@ -1,4 +1,4 @@
-// server/index.js
+// server/src/index.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -9,7 +9,7 @@ const { z } = require("zod");
 
 const app = express();
 
-// --- Config from .env (with sane fallbacks for dev) ---
+// --- Config from .env ---
 const PORT = Number(process.env.PORT || 4000);
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
 
@@ -24,7 +24,7 @@ const SMTP_PASS = process.env.SMTP_PASS;
 const RATE_LIMIT_WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS || 60_000);
 const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX || 5);
 
-// --- Basic guards to help you catch missing env quickly ---
+// --- Guards so you notice missing envs early ---
 if (!EMAIL_TO) console.warn("[WARN] EMAIL_TO is not set in .env");
 if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
   console.warn("[WARN] SMTP credentials are missing. Email sending will fail.");
@@ -43,8 +43,8 @@ app.use(express.json({ limit: "100kb" }));
 
 // --- Rate limiting (per IP) ---
 const limiter = rateLimit({
-  windowMs: RATE_LIMIT_WINDOW_MS, // e.g., 60 seconds
-  max: RATE_LIMIT_MAX,            // e.g., 5 requests per window
+  windowMs: RATE_LIMIT_WINDOW_MS,
+  max: RATE_LIMIT_MAX,
   standardHeaders: "draft-7",
   legacyHeaders: false,
   message: {
@@ -59,80 +59,132 @@ const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
   email: z.string().email("Please enter a valid email"),
   message: z.string().min(1, "Message is required").max(5000),
-  // Optional fields:
   company: z.string().max(150).optional().or(z.literal("")).transform((v) => v || undefined),
   phone: z.string().max(30).optional().or(z.literal("")).transform((v) => v || undefined),
   subject: z.string().max(150).optional().or(z.literal("")).transform((v) => v || undefined),
 });
 
+// --- helper: normalize a US phone number like 3189531464 -> (318)-953-1464 ---
+function formatPhone(raw) {
+  if (!raw) return undefined;
+  const digits = String(raw).replace(/\D/g, "").slice(0, 11); // allow up to 11 in case of leading 1
+  const ten = digits.length === 11 && digits.startsWith("1") ? digits.slice(1) : digits;
+  if (ten.length !== 10) return raw; // leave as-is if not 10 digits
+  return `(${ten.slice(0, 3)})-${ten.slice(3, 6)}-${ten.slice(6)}`;
+}
+
 // --- Mail transporter ---
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
   port: SMTP_PORT,
-  secure: SMTP_PORT === 465, // true for 465, false for 587/25
+  secure: SMTP_PORT === 465,
   auth: {
     user: SMTP_USER,
     pass: SMTP_PASS,
   },
 });
 
-// --- Health check (useful in dev/deploy) ---
+// --- Health check ---
 app.get("/health", (_req, res) => {
-  res.json({ ok: true, service: "sogas-backend", time: new Date().toISOString() });
+  const now = new Date();
+  res.json({
+    ok: true,
+    service: "sogas-backend",
+    time: now.toLocaleString("en-US", {
+      timeZone: "America/Chicago",
+      hour12: false,
+    }),
+    timeZone: "America/Chicago",
+  });
 });
+
 
 // --- Contact endpoint ---
 app.post("/api/contact", async (req, res) => {
   try {
-    // 1) Validate incoming JSON
+    // 1) Validate
     const data = contactSchema.parse(req.body);
 
     // 2) Build email content
-    const lines = [
-      `New contact form submission from Southern Gas Services Website`,
+    const prettyPhone = data.phone ? formatPhone(data.phone) : undefined;
+
+    const textLines = [
+      "New contact form submission from Southern Gas Services website",
       "",
       `Name:    ${data.name}`,
       `Email:   ${data.email}`,
       data.company ? `Company: ${data.company}` : null,
-      data.phone ? `Phone:   ${data.phone}` : null,
+      prettyPhone ? `Phone:   ${prettyPhone}` : null,
       data.subject ? `Subject: ${data.subject}` : null,
       "",
       "Message:",
       data.message,
     ].filter(Boolean);
 
+    const html =
+      `
+<div style="font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:#0b2545;">
+  <div style="max-width:640px;margin:24px auto;padding:20px 24px;border:1px solid #e5e7eb;border-radius:12px;background:#ffffff;">
+    <h2 style="margin:0 0 8px 0;font-size:20px;">New contact form submission</h2>
+    <p style="margin:0 0 16px 0;font-size:14px;color:#334155;">Southern Gas Services website</p>
+
+    <table role="presentation" width="100%" style="border-collapse:collapse;margin:0 0 16px 0;">
+      <tbody>
+        <tr>
+          <td style="padding:8px 0;font-weight:600;width:120px;">Name</td>
+          <td style="padding:8px 0;">${escapeHtml(data.name)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;font-weight:600;">Email</td>
+          <td style="padding:8px 0;">${escapeHtml(data.email)}</td>
+        </tr>
+        ${data.company ? `
+        <tr>
+          <td style="padding:8px 0;font-weight:600;">Company</td>
+          <td style="padding:8px 0;">${escapeHtml(data.company)}</td>
+        </tr>` : ``}
+        ${prettyPhone ? `
+        <tr>
+          <td style="padding:8px 0;font-weight:600;">Phone</td>
+          <td style="padding:8px 0;">${escapeHtml(prettyPhone)}</td>
+        </tr>` : ``}
+        ${data.subject ? `
+        <tr>
+          <td style="padding:8px 0;font-weight:600;">Subject</td>
+          <td style="padding:8px 0;">${escapeHtml(data.subject)}</td>
+        </tr>` : ``}
+      </tbody>
+    </table>
+
+    <div style="padding:12px 14px;border:1px solid #e5e7eb;border-radius:8px;background:#f8fafc;">
+      <div style="font-weight:600;margin-bottom:8px;">Message</div>
+      <div style="white-space:pre-wrap;line-height:1.5;">${escapeHtml(data.message)}</div>
+    </div>
+  </div>
+</div>
+`.trim();
+
     // 3) Send email
-    if (!EMAIL_TO) {
-      // Fail fast if target isn't configured
-      return res.status(500).json({
-        success: false,
-        message: "Email destination not configured.",
-      });
-    }
-
     const info = await transporter.sendMail({
-      from: EMAIL_FROM,       // display name
-      to: EMAIL_TO,           // company inbox
-      replyTo: data.email,    // hitting Reply goes to the sender
+      from: EMAIL_FROM,               // display From
+      to: EMAIL_TO,                   // destination
+      replyTo: data.email,            // reply goes to sender
       subject: data.subject || `New message from ${data.name}`,
-      text: lines.join("\n"),
-      html: lines.map((l) => (l === "" ? "<br/>" : `<div>${escapeHtml(l)}</div>`)).join(""),
-
-      //Force MAIN FROM to match mailbox
+      text: textLines.join("\n"),     // plain-text fallback
+      html,                           // HTML version
       envelope: {
-        from: SMTP_USER,
-        to: EMAIL_TO
-      }
+        from: SMTP_USER,              // must match authenticated account
+        to: EMAIL_TO,
+      },
     });
 
-    // 4) Respond success
+    // 4) Respond
     return res.status(200).json({
       success: true,
       message: "Your message has been sent.",
       id: info.messageId,
     });
   } catch (err) {
-    // Zod validation errors
     if (err instanceof z.ZodError) {
       const errors = {};
       for (const e of err.issues) {
@@ -141,7 +193,6 @@ app.post("/api/contact", async (req, res) => {
       }
       return res.status(400).json({ success: false, errors });
     }
-
     console.error("[/api/contact] Error:", err);
     return res
       .status(500)
