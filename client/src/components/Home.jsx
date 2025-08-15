@@ -4,7 +4,9 @@ import Hero from './homepage/Hero'
 import Mission from './homepage/Mission'
 //Import Services Section
 import Services from './homepage/Services'
-//Import ABout Section
+//Import Crew Section
+import Crew from './homepage/Crew'
+//Import About Section
 import About from './homepage/About'
 //Import Contact Section
 import Contact from './homepage/Contact'
@@ -17,6 +19,7 @@ export default function Home() {
             <Hero />
             <Mission />
             <Services />
+            <Crew />
             <About />
             <Contact />
                
