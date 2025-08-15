@@ -2,6 +2,8 @@
 import Hero from './homepage/Hero'
 //Imoort Mission Section
 import Mission from './homepage/Mission'
+//Import Pipeline Section
+import Pipe from './homepage/Pipe'
 //Import Services Section
 import Services from './homepage/Services'
 //Import Crew Section
@@ -18,6 +20,7 @@ export default function Home() {
             
             <Hero />
             <Mission />
+            <Pipe />
             <Services />
             <Crew />
             <About />
