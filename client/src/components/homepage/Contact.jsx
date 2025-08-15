@@ -2,6 +2,22 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
+// Only Keep digits for Phone#
+function onlyDigits(str) {
+  return String(str || "").replace(/\D/g, "");
+}
+
+// Auto Format Phone#: (xxx)-xxx-xxxx
+function formatPhoneForDisplay(raw) {
+  const d = onlyDigits(raw).slice(0, 10);
+  const a = d.slice(0, 3);
+  const b = d.slice(3, 6);
+  const c = d.slice(6, 10);
+  if (d.length <= 3) return a ? `(${a}` : "";
+  if (d.length <= 6) return `(${a})-${b}`;
+  return `(${a})-${b}-${c}`;
+}
+
 export default function Contact() {
   // ---- Form State ----
   const [form, setForm] = useState({
@@ -19,6 +35,12 @@ export default function Contact() {
   function onChange(e) {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
+  }
+
+  // Special onChange for phone: store digits; display formatted
+  function onChangePhone(e) {
+    const digits = onlyDigits(e.target.value).slice(0, 10);
+    setForm((f) => ({ ...f, phone: digits }));
   }
 
   function validate() {
@@ -58,7 +80,7 @@ export default function Contact() {
           message: form.message.trim(),
           // Optional Fields
           company: form.company.trim() || undefined,
-          phone: form.phone.trim() || undefined,
+          phone: form.phone.trim() || undefined, // <- digits only
           subject: form.subject.trim() || undefined,
         }),
       });
@@ -217,8 +239,8 @@ export default function Contact() {
                 name="phone"
                 label="Phone Number"
                 placeholder="Phone Number"
-                value={form.phone}
-                onChange={onChange}
+                value={formatPhoneForDisplay(form.phone)}
+                onChange={onChangePhone}
               />
               <Field
                 id="email"
@@ -280,7 +302,7 @@ export default function Contact() {
   );
 }
 
-/* ---------- UI Primitives  ---------- */
+/* ---------- UI Primitives ---------- */
 function Field({ id, name, label, placeholder, type = "text", value, onChange, required }) {
   return (
     <div className="flex flex-col gap-1">

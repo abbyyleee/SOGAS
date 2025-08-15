@@ -64,7 +64,7 @@ const contactSchema = z.object({
   subject: z.string().max(150).optional().or(z.literal("")).transform((v) => v || undefined),
 });
 
-// --- helper: normalize a US phone number like 3189531464 -> (318)-953-1464 ---
+// --- helper: Standard Phone Format ---
 function formatPhone(raw) {
   if (!raw) return undefined;
   const digits = String(raw).replace(/\D/g, "").slice(0, 11); // allow up to 11 in case of leading 1
