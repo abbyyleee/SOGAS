@@ -24,7 +24,7 @@ const SMTP_PASS = process.env.SMTP_PASS;
 const RATE_LIMIT_WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS || 60_000);
 const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX || 5);
 
-// --- Guards so you notice missing envs early ---
+// --- Guards ---
 if (!EMAIL_TO) console.warn("[WARN] EMAIL_TO is not set in .env");
 if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
   console.warn("[WARN] SMTP credentials are missing. Email sending will fail.");
@@ -39,7 +39,7 @@ app.use(
     credentials: false,
   })
 );
-app.use(express.json({ limit: "100kb" }));
+app.use(express.json({ limit: "50kb" }));
 
 // --- Rate limiting (per IP) ---
 const limiter = rateLimit({
@@ -54,7 +54,7 @@ const limiter = rateLimit({
 });
 app.use("/api/", limiter);
 
-// --- Validation schema (Zod) ---
+// --- Validation (Zod) ---
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
   email: z.string().email("Please enter a valid email"),
@@ -64,7 +64,7 @@ const contactSchema = z.object({
   subject: z.string().max(150).optional().or(z.literal("")).transform((v) => v || undefined),
 });
 
-// --- helper: Standard Phone Format ---
+// --- Helper: Standard Phone Format ---
 function formatPhone(raw) {
   if (!raw) return undefined;
   const digits = String(raw).replace(/\D/g, "").slice(0, 11); // allow up to 11 in case of leading 1
@@ -73,7 +73,7 @@ function formatPhone(raw) {
   return `(${ten.slice(0, 3)})-${ten.slice(3, 6)}-${ten.slice(6)}`;
 }
 
-// --- Mail transporter ---
+// --- Mail Transporter ---
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
   port: SMTP_PORT,
@@ -84,7 +84,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// --- Health check ---
+// --- Health Check ---
 app.get("/health", (_req, res) => {
   const now = new Date();
   res.json({
@@ -99,7 +99,7 @@ app.get("/health", (_req, res) => {
 });
 
 
-// --- Contact endpoint ---
+// --- Contact Endpoint ---
 app.post("/api/contact", async (req, res) => {
   try {
     // 1) Validate
@@ -123,46 +123,46 @@ app.post("/api/contact", async (req, res) => {
 
     const html =
       `
-<div style="font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:#0b2545;">
-  <div style="max-width:640px;margin:24px auto;padding:20px 24px;border:1px solid #e5e7eb;border-radius:12px;background:#ffffff;">
-    <h2 style="margin:0 0 8px 0;font-size:20px;">New contact form submission</h2>
-    <p style="margin:0 0 16px 0;font-size:14px;color:#334155;">Southern Gas Services website</p>
+    <div style="font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:#0b2545;">
+      <div style="max-width:640px;margin:24px auto;padding:20px 24px;border:1px solid #e5e7eb;border-radius:12px;background:#ffffff;">
+        <h2 style="margin:0 0 8px 0;font-size:20px;">New contact form submission</h2>
+        <p style="margin:0 0 16px 0;font-size:14px;color:#334155;">Southern Gas Services website</p>
 
-    <table role="presentation" width="100%" style="border-collapse:collapse;margin:0 0 16px 0;">
-      <tbody>
-        <tr>
-          <td style="padding:8px 0;font-weight:600;width:120px;">Name</td>
-          <td style="padding:8px 0;">${escapeHtml(data.name)}</td>
-        </tr>
-        <tr>
-          <td style="padding:8px 0;font-weight:600;">Email</td>
-          <td style="padding:8px 0;">${escapeHtml(data.email)}</td>
-        </tr>
-        ${data.company ? `
-        <tr>
-          <td style="padding:8px 0;font-weight:600;">Company</td>
-          <td style="padding:8px 0;">${escapeHtml(data.company)}</td>
-        </tr>` : ``}
-        ${prettyPhone ? `
-        <tr>
-          <td style="padding:8px 0;font-weight:600;">Phone</td>
-          <td style="padding:8px 0;">${escapeHtml(prettyPhone)}</td>
-        </tr>` : ``}
-        ${data.subject ? `
-        <tr>
-          <td style="padding:8px 0;font-weight:600;">Subject</td>
-          <td style="padding:8px 0;">${escapeHtml(data.subject)}</td>
-        </tr>` : ``}
-      </tbody>
-    </table>
+        <table role="presentation" width="100%" style="border-collapse:collapse;margin:0 0 16px 0;">
+          <tbody>
+            <tr>
+              <td style="padding:8px 0;font-weight:600;width:120px;">Name</td>
+              <td style="padding:8px 0;">${escapeHtml(data.name)}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 0;font-weight:600;">Email</td>
+              <td style="padding:8px 0;">${escapeHtml(data.email)}</td>
+            </tr>
+            ${data.company ? `
+            <tr>
+              <td style="padding:8px 0;font-weight:600;">Company</td>
+              <td style="padding:8px 0;">${escapeHtml(data.company)}</td>
+            </tr>` : ``}
+            ${prettyPhone ? `
+            <tr>
+              <td style="padding:8px 0;font-weight:600;">Phone</td>
+              <td style="padding:8px 0;">${escapeHtml(prettyPhone)}</td>
+            </tr>` : ``}
+          ${data.subject ? `
+            <tr>
+              <td style="padding:8px 0;font-weight:600;">Subject</td>
+              <td style="padding:8px 0;">${escapeHtml(data.subject)}</td>
+            </tr>` : ``}
+          </tbody>
+        </table>
 
-    <div style="padding:12px 14px;border:1px solid #e5e7eb;border-radius:8px;background:#f8fafc;">
-      <div style="font-weight:600;margin-bottom:8px;">Message</div>
-      <div style="white-space:pre-wrap;line-height:1.5;">${escapeHtml(data.message)}</div>
+        <div style="padding:12px 14px;border:1px solid #e5e7eb;border-radius:8px;background:#f8fafc;">
+          <div style="font-weight:600;margin-bottom:8px;">Message</div>
+          <div style="white-space:pre-wrap;line-height:1.5;">${escapeHtml(data.message)}</div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-`.trim();
+    `.trim();
 
     // 3) Send email
     const info = await transporter.sendMail({
@@ -200,12 +200,26 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
-// --- 404 for unknown routes under /api ---
-app.use("/api/*", (_req, res) => {
-  res.status(404).json({ success: false, message: "Not found" });
+// 404 for unknown routes
+app.use((req, res, next) => {
+  res.status(404).json({ ok: false, error: "Not found" });
 });
 
-// --- Start server ---
+// Central error handler (catches bad JSON and all other errors)
+app.use((err, req, res, next) => {
+  const isSyntaxError = err instanceof SyntaxError && "body" in err;
+  const status = err.status || (isSyntaxError ? 400 : 500);
+  const message = isSyntaxError ? "Invalid JSON" : (err.message || "Internal server error");
+
+  if (process.env.NODE_ENV !== "production") {
+    console.error("Error:", err);
+  }
+
+  res.status(status).json({ ok: false, error: message });
+});
+
+
+// --- Start Server ---
 app.listen(PORT, () => {
   console.log(`SOGAS backend listening on http://localhost:${PORT}`);
 });
