@@ -92,7 +92,6 @@ export default function Pipe({
               {/* Footer strip */}
               <div className="flex items-center justify-between px-4 py-3 bg-dark-navy/60 backdrop-blur-sm border-t border-light-blue/10">
                 <span className="text-sm text-light-blue/90">SOGAS</span>
-                <span className="text-xs text-light-blue/70">View</span>
               </div>
 
               {/* Glow ring */}

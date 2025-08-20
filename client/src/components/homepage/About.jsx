@@ -43,7 +43,7 @@ export default function About() {
             About Southern Gas Services
           </h2>
 
-          <p className="text-base leading-relaxed">
+          <p className="text-base leading-relaxed font-semibold">
             SOGAS is a Louisiana interstate pipeline energy support company specializing in the
             installation of natural gas facilities to provide reliable natural gas supply services
             as well as natural gas marketing, operations & maintenance, and regulatory compliance

@@ -8,7 +8,7 @@ export default function Services() {
         },
         {
             title: "Natural Gas Marketing",
-            description: "Provides natural gas _____ solutions to end-users and oil & gas producers. ",
+            description: "Provides natural gas energy solutions to end-users and oil & gas producers. ",
         },
         {
             title: "Natural Gas Consulting",

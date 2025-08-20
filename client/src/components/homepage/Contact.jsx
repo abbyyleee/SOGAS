@@ -145,7 +145,7 @@ export default function Contact() {
                   </svg>
                 }
               >
-                129 Eagle Rock Drive
+                4565 Cypress Street Suite 110-2
                 <br />
                 West Monroe, LA 71291
               </InfoItem>
@@ -179,7 +179,6 @@ export default function Contact() {
               >
                 (318) 355-4443
                 <br />
-                Fax: (318) 123-4567
               </InfoItem>
             </ul>
           </div>
