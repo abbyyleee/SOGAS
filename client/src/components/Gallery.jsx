@@ -75,7 +75,7 @@ export default function Gallery() {
         >
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Gallery</h1>
           <p className="mt-3 max-w-2xl text-deep-blue/80">
-            A simple, premium showcase of our work. (Organization coming later.)
+            Here is a showcase of our work.
           </p>
           <div className="mt-6 h-[3px] w-24 rounded-full bg-gradient-to-r from-reg-blue via-soft-blue to-light-blue" />
         </motion.div>
@@ -89,7 +89,7 @@ export default function Gallery() {
         )}
         {status.type === "idle" && images.length === 0 && (
           <div className="text-deep-blue/70">
-            No images yet. (Add items to <code>/public/images/gallery.json</code>.)
+            No images yet.
           </div>
         )}
 

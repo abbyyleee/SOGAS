@@ -2,7 +2,7 @@
     "images": [
       { "id": "t1", "src": "/images/test1.jpg", "alt": "Test image 1", "caption": "First test photo" },
       { "id": "t2", "src": "/images/test2.jpg", "alt": "Test image 2", "caption": "Second test photo" },
-      { "id": "t3", "src": "/images/test3.JPG", "alt": "Test image 3", "caption": "Third test photo" }
+      { "id": "t3", "src": "public/images/test3.JPG", "alt": "Test image 3", "caption": "Third test photo" }
     ]
   }
   
