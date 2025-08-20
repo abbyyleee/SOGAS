@@ -22,6 +22,7 @@ export default function NavBar() {
                     <a href="#about" className="text-white hover:text-soft-blue transition">About</a>
                     <a href="#services" className="text-white hover:text-soft-blue transition">Services</a>
                     <a href="#contact" className="text-white hover:text-soft-blue transition">Contact</a>
+                    <a href="#gallery" className="text-white hover:text-soft-blue transition">Gallery</a>
                 </nav>
             </div>
         </header>
