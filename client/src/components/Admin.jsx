@@ -11,7 +11,7 @@ const OWNER_NAME = "Abby Lee";
 const OWNER_EMAIL = "abbychrislee@gmail.com";
 const OWNER_PHONE = "(318)-953-1464";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3000";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
 /* Animations */
 const fadeIn = {
@@ -134,12 +134,13 @@ export default function Admin() {
     );
   }, [contacts, q]);
 
+  console.log("API_BASE:", API_BASE);
   useEffect(() => {
     let mounted = true;
     async function loadHealth() {
       try {
         setHealthError("");
-        const res = await fetch(`${API_BASE}/health`, { credentials: "include" });
+        const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/health`);
         if (!res.ok) throw new Error(`${res.status}`);
         const data = await res.json();
         if (mounted) setHealth(data);
