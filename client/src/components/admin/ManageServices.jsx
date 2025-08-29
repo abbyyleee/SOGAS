@@ -1,5 +1,6 @@
-// src/components/admin/ManageServoces.jsx
+// src/components/admin/ManageServices.jsx
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -9,6 +10,20 @@ const fadeIn = {
 };
 
 export default function ManageServices() {
+    const [services, setServices] = useState([
+        {
+            id: 1,
+            title: "Pipeline Installation",
+            description: "Expert setup and underground natural gas installation servoces.",
+            status: "Active"
+        },
+        {
+            id: 2,
+            title: "Emergency Repair",
+            description: "24/7 emergency response for pipeline leaks.",
+            status: "Active"
+        },
+    ]);
     return (
         <div className="min-h-screen bg-deep-blue text-white px-10 py-24 mx-auto">
             
@@ -48,7 +63,38 @@ export default function ManageServices() {
                 
                 {/* List of Services */}
                 <div className="rounded-xl bg-soft-blue/10 p-6 ring-1 ring-light-blue">
-                    <p className="text-white">List will go here.</p>
+                    <div className="grid gap-6 sm:grid-cols-2 lg-grid-cols-3">
+                        {dummyServices.map((service) => (
+                            <motion.div 
+                                key={service.id}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y:0 }}
+                                transition={{ duration: 0.35 }}
+                                className="bg-light-blue text-dark-navy p-6 rounded-2xl shadow ring-1 ring-dark-navy"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <h3 className="text-lg font-semibold">{service.title}</h3>
+                                </div>
+                                <p className="mt-2 text-sm text-dark-navy">{service.description}</p>
+                                <div className="mt-4 text-sm font-medium">
+                                    Status: {""}
+                                    <span className="px-4 -y-1 rounded-full bg-emerald-500 text-deep-blue ring-1 ring-soft-blue">
+                                        {service.status}
+                                    </span>
+                                </div>
+
+                                {/* Edit and Delete Services */}
+                                <div className="mt-4 flex gap-2">
+                                    <button className="px-3 py-1 bg-rust text-dark-navy rounded-lg text-sm hover:bg-light-blue hover:text-dark-navy transition">
+                                        Edit
+                                    </button>
+                                    <button className="px-3 py-1 bg-rust text-dark-navy rounded-lg text-sm hover:bg-red-700 transition">
+                                        Delete
+                                    </button>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </section>    
         </div>
