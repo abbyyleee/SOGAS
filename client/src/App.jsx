@@ -30,7 +30,7 @@ export default function App() {
             <Route path="/gallery" element={<Gallery />} />
             {/* Admin */}
             <Route path="/admin" element={<Admin />} />
-            <Route path="/admin/service" element={<ManageServices />} />
+            <Route path="/admin/services" element={<ManageServices />} />
           </Routes>
         </main>
 
