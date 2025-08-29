@@ -24,6 +24,13 @@ export default function ManageServices() {
             status: "Active"
         },
     ]);
+
+    function handleDelete(id) {
+        const confirmDelete = window.confirm("Are you sure you want to delete this service?");
+        if (confirmDelete) {
+            setServices((prev) => prev.filter((service) => service.id != id));
+        }
+    }
     return (
         <div className="min-h-screen bg-deep-blue text-white px-10 py-24 mx-auto">
             
@@ -64,7 +71,7 @@ export default function ManageServices() {
                 {/* List of Services */}
                 <div className="rounded-xl bg-soft-blue/10 p-6 ring-1 ring-light-blue">
                     <div className="grid gap-6 sm:grid-cols-2 lg-grid-cols-3">
-                        {dummyServices.map((service) => (
+                        {services.map((service) => (
                             <motion.div 
                                 key={service.id}
                                 initial={{ opacity: 0, y: 8 }}
@@ -88,8 +95,10 @@ export default function ManageServices() {
                                     <button className="px-3 py-1 bg-rust text-dark-navy rounded-lg text-sm hover:bg-light-blue hover:text-dark-navy transition">
                                         Edit
                                     </button>
-                                    <button className="px-3 py-1 bg-rust text-dark-navy rounded-lg text-sm hover:bg-red-700 transition">
-                                        Delete
+                                    <button 
+                                        onClick={() => handleDelete(service.id)}
+                                        className="px-3 py-1 bg-rust text-dark-navy rounded-lg text-sm hover:bg-red-700 transition">
+                                            Delete
                                     </button>
                                 </div>
                             </motion.div>
