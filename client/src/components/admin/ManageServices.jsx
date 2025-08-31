@@ -81,7 +81,9 @@ export default function ManageServices() {
                                 <p className="mt-2 text-sm text-dark-navy">{service.description}</p>
                                 <div className="mt-4 text-sm font-medium">
                                     Status:{" "}
-                                    <span className="px-4 py-1 rounded-full bg-emerald-500 text-deep-blue ring-1 ring-soft-blue">
+                                    <span className={`px-4 py-1 rounded-full bg-emerald-500 text-deep-blue ring-1 ring-soft-blue
+                                                     ${service.status === "Inactive" ? "bg-red-500" : "bg-emerald-500"
+                                    }`}>
                                         {service.status}
                                     </span>
                                 </div>
@@ -141,6 +143,20 @@ export default function ManageServices() {
                                         onChange={(e) => setEditService({ ...editService, description: e.target.value })}
                                         className="w-full border rounded px-3 py-2 bg-white text-dark-navy"
                                     />    
+                                </div>
+
+                                <div className="mb-3">
+                                    <label className="block text-sm font-semibold mb-1">Status (Active / Inactive)</label>
+                                    <select
+                                        value={editService.status}
+                                        onChange={(e) => 
+                                            setEditService({...editService, status: e.target.value })
+                                        }
+                                        className="w-full border rounded px-3 py-2 bg-white text-dark-navy"
+                                    >
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>    
+                                    </select>    
                                 </div>
 
                                 <div className="flex space-x-3">
