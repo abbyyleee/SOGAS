@@ -25,7 +25,11 @@ export default function ManageServices() {
         },
     ]);
 
+    const [newTitle, setNewTitle] = useState("");
+    const [newDescription, setNewDescription] = useState("");
+    const [newStatus, setNewStatus] = useState("Active");
     const [editService, setEditService] = useState(null);
+    
 
     function handleDelete(id) {
         const confirmDelete = window.confirm("Are you sure you want to delete this service?");
@@ -51,77 +55,17 @@ export default function ManageServices() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="text-3xl font-bold mb-10"
+                className="text-4xl font-bold mb-10 text-center"
             >
                 Manage Services 
             </motion.div>
-
-            {/* Add New Service */}
-            <section className="mb-12">
-                <h2 className="text-xl font-semibold text-white mb-4">Add New Services</h2>
-                
-                {/* Service Form */}
-                <div className="rounded-xl bg-soft-blue/10 p-6 ring-1 ring-light-blue">
-                    {editService && (
-                        <div className="mt-6 bg-white text-dark-navy p-4 rounded-lg">
-                            <h3 className="text-lg font-semibold mb-4">Editing: {editService.title}</h3>
-
-                            <form 
-                                onSubmit={(e) => {
-                                    e.preventDefault();
-                                    const updatedServices = services.map((service) =>
-                                        service.id === editService.id ? editService : service
-                                    );
-                                    setServices(updatedServices);
-                                    setEditService(null);
-                                }}
-                            >
-                                <div className="mb-3">
-                                    <label className="block text-sm font-medium mb-1">Title</label>
-                                    <input 
-                                        type="text"
-                                        value={editService.title}
-                                        onChange={(e) => setEditService({ ...editService, title: e.target.value })}
-                                        className="w-full border rounded px-3 py-2 bg-light-blue"
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label className="block text-sm font-medium mb-1">Description</label>
-                                    <textarea 
-                                        value={editService.description}
-                                        onChange={(e) => setEditService({ ...editService, description: e.target.value })}
-                                        className="w-full border rounded px-3 py-2 bg-light-blue"
-                                    />    
-                                </div>
-
-                                <div className="flex space-x-3">
-                                    <button 
-                                        type="submit"
-                                        className="bg-deep-blue text-white px-4 py-2 rounded hover:text-dark-navy hover:bg-emerald-500"
-                                    >
-                                        Save
-                                    </button>
-                                    <button 
-                                        type="button"
-                                        onClick={() => setEditService(null)}
-                                        className="bg-deep-blue text-white px-4 py-2 rounded hover:bg-red-500 hover:text-dark-navy"
-                                    >
-                                        Cancel 
-                                    </button>    
-                                </div>
-                            </form>
-                        </div>    
-                    )}
-                </div>
-            </section>
 
             {/* Current Services */}
             <section>
                 <h2 className="text-xl font-semibold text-white mb-4">Current Services</h2>
                 
                 {/* List of Services */}
-                <div className="rounded-xl bg-soft-blue/10 p-6 ring-1 ring-light-blue">
+                <div className="rounded-xl bg-light-blue p-6 ring-1 ring-light-blue">
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {services.map((service) => (
                             <motion.div 
@@ -129,7 +73,7 @@ export default function ManageServices() {
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.35 }}
-                                className="bg-light-blue text-dark-navy p-6 rounded-2xl shadow ring-1 ring-dark-navy"
+                                className="bg-white text-dark-navy p-6 rounded-2xl shadow ring-1 ring-dark-navy"
                             >
                                 <div className="flex items-center gap-3">
                                     <h3 className="text-lg font-semibold">{service.title}</h3>
@@ -161,7 +105,130 @@ export default function ManageServices() {
                         ))}
                     </div>
                 </div>
-            </section>    
+            </section>
+
+            {/* Edit Services Section */}
+            {editService && (
+                <section className="mb-12 py-12">
+                    <h2 className="text-xl font-semibold text-white mb-4">Edit Service</h2>
+                        <div className="rounded-xl bg-light-blue text-dark-navy p-6 ring-1 ring-light-blue bg-opacity">
+                            <h3 className="text-lg font-semibold mb-4">Editing: {editService.title}</h3>
+
+                            <form 
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    const updatedServices = services.map((service) =>
+                                        service.id === editService.id ? editService : service
+                                    );
+                                    setServices(updatedServices);
+                                    setEditService(null);
+                                }}
+                            >
+                                <div className="mb-3">
+                                    <label className="block text-sm font-medium mb-1">Title</label>
+                                    <input 
+                                        type="text"
+                                        value={editService.title}
+                                        onChange={(e) => setEditService({ ...editService, title: e.target.value })}
+                                        className="w-full border rounded px-3 py-2 bg-white text-dark-navy"
+                                    />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label className="block text-sm font-medium mb-1">Description</label>
+                                    <textarea 
+                                        value={editService.description}
+                                        onChange={(e) => setEditService({ ...editService, description: e.target.value })}
+                                        className="w-full border rounded px-3 py-2 bg-white text-dark-navy"
+                                    />    
+                                </div>
+
+                                <div className="flex space-x-3">
+                                    <button 
+                                        type="submit"
+                                        className="bg-rust text-dark-navy px-4 py-2 rounded hover:text-dark-navy hover:bg-emerald-500"
+                                    >
+                                        Save
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        onClick={() => setEditService(null)}
+                                        className="bg-rust text-dark-navy px-4 py-2 rounded hover:bg-red-500 hover:text-dark-navy"
+                                    >
+                                        Cancel 
+                                    </button>    
+                                </div>
+                            </form>
+                        </div>
+                </section>            
+            )}  
+
+            {/* Add New Service */}
+            <section className="mb-12 py-10">
+                <h2 className="text-xl font-semibold text-white mb-4">Add New Services</h2>
+                
+                {/* Service Form */}
+                <div className="rounded-xl bg-light-blue p-6 ring-1 ring-light-blue">
+                    
+                    {/* Add New Service Form */}
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            const newService = {
+                                id: Date.now(),
+                                title: newTitle,
+                                description: newDescription,
+                                status: newStatus
+                            };
+                            setServices([...services, newService]);
+                            setNewTitle("");
+                            setNewDescription("");
+                            setNewStatus("Active");
+                        }}
+                        className="space-y-4"
+                    >
+                        <div>
+                            <label className="block mb-1 text-dark-navy">Title</label>
+                            <input
+                                type="text"
+                                value={newTitle}
+                                onChange={(e) => setNewTitle(e.target.value)}
+                                className="w-full px-3 py-2 rounded bg-white text-dark-navy"
+                                required
+                            />    
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-dark-navy">Description</label>
+                            <textarea
+                                value={newDescription}
+                                onChange={(e) => setNewDescription(e.target.value)}
+                                className="w-full px-3 py-2 rounded bg-white text-dark-navy"
+                                required
+                            />    
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-dark-navy">Status (Active / Inactive)</label>
+                            <select
+                                value={newStatus}
+                                onChange={(e) => setNewStatus(e.target.value)}
+                                className="w-full px-3 py-2 rounded bg-white text-dark-navy"
+                            >
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>    
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="bg-rust text-dark-navy px-4 py-2 rounded hover:bg-soft-blue hover:text-dark-navy transition"
+                        >
+                            Add Service 
+                        </button>    
+                    </form>
+                </div>
+            </section>
         </div>
     );
 }

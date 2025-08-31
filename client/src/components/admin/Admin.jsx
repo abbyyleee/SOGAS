@@ -43,9 +43,9 @@ function Badge({ tone = "neutral", children }) {
   // ok => soft-blue outline; warn => rust; neutral => light-blue
   const cls =
     tone === "ok"
-      ? "bg-emerald-500 text-deep-blue ring-1 ring-soft-blue/40"
+      ? "bg-emerald-500 text-deep-blue font-bold ring-1 ring-soft-blue/40"
       : tone === "warn"
-      ? "bg-rust text-dark-navy ring-1 ring-rust/40"
+      ? "bg-rust text-dark-navy font-bold ring-1 ring-rust/40"
       : "bg-light-blue/15 text-deep-blue ring-1 ring-light-blue/40";
   return (
     <span className={`px-2 py-1 rounded-full text-xs font-medium ${cls}`}>
