@@ -38,6 +38,19 @@ export default function ManageServices() {
         }
     }
 
+    function toggleStatus(id) {
+        setServices((prev) =>
+            prev.map((service) =>
+                service.id === id 
+                    ? {
+                        ...service,
+                        status: service.status === "Active" ? "Inactive" : "Active",
+                    }
+                    : service 
+            )
+        );
+    }
+
     return (
         <div className="min-h-screen bg-deep-blue text-white px-10 py-24 mx-auto">
             {/* Back To Dashboard */}
@@ -79,7 +92,7 @@ export default function ManageServices() {
                                     <h3 className="text-lg font-semibold">{service.title}</h3>
                                 </div>
                                 <p className="mt-2 text-sm text-dark-navy">{service.description}</p>
-                                <div className="mt-4 text-sm font-medium">
+                                <div className="mt-4 text-sm font-medium py-4">
                                     Status:{" "}
                                     <span className={`px-4 py-1 rounded-full bg-emerald-500 text-deep-blue ring-1 ring-soft-blue
                                                      ${service.status === "Inactive" ? "bg-red-500" : "bg-emerald-500"
@@ -87,6 +100,13 @@ export default function ManageServices() {
                                         {service.status}
                                     </span>
                                 </div>
+
+                                <button 
+                                    onClick={() => toggleStatus(service.id)}
+                                    className="mt-2 text-xs px-2 py-1 rounded bg-light-blue text-dark-navy hover:bg-soft-blue transition"
+                                >
+                                    {service.status === "Active" ? "Deactivate" : "Activate"}    
+                                </button>    
 
                                 {/* Edit and Delete Services */}
                                 <div className="mt-4 flex gap-2">
