@@ -7,7 +7,10 @@ import rateLimit from "express-rate-limit";
 import nodemailer from "nodemailer";
 import { z } from "zod";
 import dotenv from "dotenv";
+
+// Routes
 import adminRoutes from "../routes/admin.js";
+import serviceRoutes from "../routes/services.js";
 
 dotenv.config();
 
@@ -56,10 +59,12 @@ const limiter = rateLimit({
     message: "Too many requests. Please try again later.",
   },
 });
+
 app.use("/api/", limiter);
 
 // --- Routes ---
 app.use("/api", adminRoutes);
+app.use("/api/services", serviceRoutes);
 
 // --- /api/health route for admin panel ---
 app.get("/api/health", (_req, res) => {

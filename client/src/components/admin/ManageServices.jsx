@@ -1,8 +1,11 @@
 // src/components/admin/ManageServices.jsx
 
+import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import api from "../../lib/api";
+
 
 const fadeIn = {
     hidden: { opacity: 0, y: 12 },
@@ -10,45 +13,45 @@ const fadeIn = {
 };
 
 export default function ManageServices() {
-    const [services, setServices] = useState([
-        {
-            id: 1,
-            title: "Pipeline Installation",
-            description: "Expert setup and underground natural gas installation servoces.",
-            status: "Active"
-        },
-        {
-            id: 2,
-            title: "Emergency Repair",
-            description: "24/7 emergency response for pipeline leaks.",
-            status: "Active"
-        },
-    ]);
-
+    
+    const [services, setServices] = useState([]);
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [newStatus, setNewStatus] = useState("Active");
     const [editService, setEditService] = useState(null);
     
+    useEffect(() => {
+        api.get("/services")
+        .then((res) => setServices(res.data))
+        .catch((err) => console.error("Error fetching services: ", err));
+    }, []);
 
-    function handleDelete(id) {
+    async function handleDelete(id) {
         const confirmDelete = window.confirm("Are you sure you want to delete this service?");
         if (confirmDelete) {
-            setServices((prev) => prev.filter((service) => service.id !== id));
+            try {
+                await api.delete(`/services/${id}`);
+                setServices((prev) => prev.filter((service) => service.id !== id));
+            } catch (err) {
+                console.error("Error deleting service: ", err);
+            }
         }
     }
 
-    function toggleStatus(id) {
-        setServices((prev) =>
-            prev.map((service) =>
-                service.id === id 
-                    ? {
-                        ...service,
-                        status: service.status === "Active" ? "Inactive" : "Active",
-                    }
-                    : service 
-            )
-        );
+    async function toggleStatus(id) {
+        try {
+            const service = services.find((s) => s.id === id);
+            const updatedStatus = service.status === "Active" ? "Inactive" : "Active";
+            await api.put(`/services/${id}`, {
+                ...service,
+                status: updatedStatus,
+            });
+            setServices((prev) => 
+                prev.map((s) => (s.id === id ? { ...s, status: updatedStatus } : s))
+            );
+        } catch (err) {
+            console.error("Error toggling status: ", err);
+        }
     }
 
     return (
@@ -137,13 +140,18 @@ export default function ManageServices() {
                             <h3 className="text-lg font-semibold mb-4">Editing: {editService.title}</h3>
 
                             <form 
-                                onSubmit={(e) => {
+                                onSubmit={async (e) => {
                                     e.preventDefault();
-                                    const updatedServices = services.map((service) =>
-                                        service.id === editService.id ? editService : service
-                                    );
-                                    setServices(updatedServices);
-                                    setEditService(null);
+                                    try {
+                                        await api.put(`/services/${editService.id}`, editService);
+                                        const updatedServices = services.map((service) =>
+                                            service.id === editService.id ? editService : service 
+                                        );
+                                        setServices(updatedServices);
+                                        setEditService(null);
+                                    } catch (err) {
+                                        console.error("Error updating service: ", err);
+                                    }
                                 }}
                             >
                                 <div className="mb-3">
@@ -208,18 +216,18 @@ export default function ManageServices() {
                     
                     {/* Add New Service Form */}
                     <form
-                        onSubmit={(e) => {
+                        onSubmit={async (e) => {
                             e.preventDefault();
-                            const newService = {
-                                id: Date.now(),
-                                title: newTitle,
-                                description: newDescription,
-                                status: newStatus
-                            };
-                            setServices([...services, newService]);
-                            setNewTitle("");
-                            setNewDescription("");
-                            setNewStatus("Active");
+                            try {
+                                const newService = { title: newTitle, description: newDescription, status: newStatus };
+                                const res = await api.post("/services", newService);
+                                setServices([...services, { id: res.data.id, ...newService }]);
+                                setNewTitle("");
+                                setNewDescription("");
+                                setNewStatus("Active");
+                            } catch (err) {
+                                console.error("Error adding service: ", err);
+                            }
                         }}
                         className="space-y-4"
                     >
