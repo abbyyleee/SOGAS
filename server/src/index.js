@@ -12,6 +12,7 @@ import dotenv from "dotenv";
 // Routes
 import adminRoutes from "../routes/admin.js";
 import serviceRoutes from "../routes/services.js";
+import galleryRoutes from "../routes/gallery.js";
 
 
 dotenv.config();
@@ -29,11 +30,6 @@ const SMTP_HOST = process.env.SMTP_HOST;
 const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
-
-const RATE_LIMIT_WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS || 60_000);
-const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX || 100);
-
-const router = Router();
 
 // --- Guards ---
 if (!EMAIL_TO) console.warn("[WARN] EMAIL_TO is not set in .env");
@@ -54,6 +50,7 @@ app.use(express.json({ limit: "50kb" }));
 // --- Routes ---
 app.use("/api", adminRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/gallery", galleryRoutes);
 
 // --- /api/health route for admin panel ---
 app.get("/api/health", (_req, res) => {
