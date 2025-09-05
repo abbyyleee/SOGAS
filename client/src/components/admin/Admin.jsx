@@ -11,7 +11,7 @@ const OWNER_NAME = "Abby Lee";
 const OWNER_EMAIL = "abbychrislee@gmail.com";
 const OWNER_PHONE = "(318)-953-1464";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3000";
 
 /* Animations */
 const fadeIn = {

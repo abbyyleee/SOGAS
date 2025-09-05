@@ -1,6 +1,7 @@
 // server/src/index.js
 
 import express from "express";
+import { Router } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -11,6 +12,7 @@ import dotenv from "dotenv";
 // Routes
 import adminRoutes from "../routes/admin.js";
 import serviceRoutes from "../routes/services.js";
+
 
 dotenv.config();
 
@@ -29,7 +31,9 @@ const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
 
 const RATE_LIMIT_WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS || 60_000);
-const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX || 5);
+const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX || 100);
+
+const router = Router();
 
 // --- Guards ---
 if (!EMAIL_TO) console.warn("[WARN] EMAIL_TO is not set in .env");
@@ -39,28 +43,13 @@ if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
 
 // --- Middleware ---
 app.use(helmet());
-app.use(
-  cors({
+app.use(cors({
     origin: CORS_ORIGIN,
-    methods: ["POST", "GET", "OPTIONS"],
+    methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
     credentials: false,
   })
 );
 app.use(express.json({ limit: "50kb" }));
-
-// --- Rate limiting (per IP) ---
-const limiter = rateLimit({
-  windowMs: RATE_LIMIT_WINDOW_MS,
-  max: RATE_LIMIT_MAX,
-  standardHeaders: "draft-7",
-  legacyHeaders: false,
-  message: {
-    success: false,
-    message: "Too many requests. Please try again later.",
-  },
-});
-
-app.use("/api/", limiter);
 
 // --- Routes ---
 app.use("/api", adminRoutes);

@@ -37,23 +37,8 @@ export default function ManageServices() {
             }
         }
     }
-
-    async function toggleStatus(id) {
-        try {
-            const service = services.find((s) => s.id === id);
-            const updatedStatus = service.status === "Active" ? "Inactive" : "Active";
-            await api.put(`/services/${id}`, {
-                ...service,
-                status: updatedStatus,
-            });
-            setServices((prev) => 
-                prev.map((s) => (s.id === id ? { ...s, status: updatedStatus } : s))
-            );
-        } catch (err) {
-            console.error("Error toggling status: ", err);
-        }
-    }
-
+      
+    
     return (
         <div className="min-h-screen bg-deep-blue text-white px-10 py-24 mx-auto">
             {/* Back To Dashboard */}
@@ -98,18 +83,11 @@ export default function ManageServices() {
                                 <div className="mt-4 text-sm font-medium py-4">
                                     Status:{" "}
                                     <span className={`px-4 py-1 rounded-full bg-emerald-500 text-deep-blue ring-1 ring-soft-blue
-                                                     ${service.status === "Inactive" ? "bg-red-500" : "bg-emerald-500"
+                                                     ${service.status.toLowerCase() === "inactive" ? "bg-red-500" : "bg-emerald-500"}
                                     }`}>
                                         {service.status}
                                     </span>
                                 </div>
-
-                                <button 
-                                    onClick={() => toggleStatus(service.id)}
-                                    className="mt-2 text-xs px-2 py-1 rounded bg-light-blue text-dark-navy hover:bg-soft-blue transition"
-                                >
-                                    {service.status === "Active" ? "Deactivate" : "Activate"}    
-                                </button>    
 
                                 {/* Edit and Delete Services */}
                                 <div className="mt-4 flex gap-2">

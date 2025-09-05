@@ -13,6 +13,13 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET Active services
+router.get("/active", (req, res) => {
+    db.query("SELECT * FROM services WHERE status = 'Active'", (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+    });
+});
+
 // POST a new service
 router.post("/", async (req, res) => {
   const { title, description, status } = req.body;
@@ -30,13 +37,18 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { title, description, status } = req.body;
-  const sql = "UPDATE services SET title=?, description=?, status=? WHERE id=?";
 
   try {
-    await db.query(sql, [title, description, status, id]);
-    res.json({ message: "Service Updated" });
+    await db.query(
+      "UPDATE services SET title = ?, description = ?, status = ? WHERE id = ?",
+      [title, description, status, id]
+    );
+
+    res.json({ message: "Service Updated", id, status });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error in PUT /services/:id:", err);
+    res.status(500).json({ error: "Failed to update service" });
   }
 });
 

@@ -1,33 +1,24 @@
+// client/src/components/homepage/Services.jsx
+
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import api from "../../lib/api";
 
 export default function Services() {
-    const services = [
-        {
-            title: "Natural Gas Pipeline",
-            description: "Installation of natural gas pipelines for industrial, midstream, and utility clients.",
-        },
-        {
-            title: "Natural Gas Marketing",
-            description: "Provides natural gas energy solutions to end-users and oil & gas producers. ",
-        },
-        {
-            title: "Natural Gas Consulting",
-            description: "Custom tailored natural gas solutions for infrastructure, planning, systems upgrades, and supply pricing options."
-                           
-        },
-        {
-            title: "Operation/Maintenance Services",
-            description: "Operation and maintenance options for proposes and exisiting natural gas facilities.",
-        },
-        {
-            title: "Regulatory Compliance",
-            description: "Full regulatory compliance on proposes and exisiting natural gas facilities.",
-        },
-        {
-            title: "Facilites Fabricated/Installation",
-            description: "Fabrication and installation of natural gas facilities.",
-        },
-    ];
+    const [services, setServices] = useState([]);
+
+    useEffect(() => {
+        async function fetchServices() {
+            try {
+                const res = await api.get("/services");
+                const activeServices = res.data.filter(service => service.status.toLowerCase() === "active");
+                setServices(activeServices);
+            } catch (error) {
+                console.error("Error fetching services:", error);
+            }
+        }
+        fetchServices();
+    }, []);
 
     const fadeUp = {
         hidden: { opacity: 0, y: 40 },
