@@ -15,7 +15,7 @@ export default function Hero() {
                     alt="Sunset Industrial Pipeline Plant"
                     className="h-full w-full object-cover animate-zoom-in"
                 />
-                <div className="absolute inset-0 bg-black/10"></div>
+                <div className="absolute inset-0 bg-black/25"></div>
             </div> 
 
             {/* Hero Content */}
@@ -25,7 +25,7 @@ export default function Hero() {
                         Welcome to <br />
                         Southern Gas Services
                     </h1>
-                    <p className="text-lg md:text-2xl text-white/95 font-medium mb-8 leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
+                    <p className="text-lg md:text-2xl text-white font-bold mb-8 leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
                         SOGAS provides dependable natural gas solutions across the Gulf Coast with a reputation built on service, safety, and trust.
                     </p>
 
