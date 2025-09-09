@@ -14,6 +14,8 @@ import Footer from "./components/Footer";
 import Admin from "./components/admin/Admin.jsx";
 // Import Manage Services
 import ManageServices from "./components/admin/ManageServices";
+// Import Manage Gallery
+import ManageGallery from "./components/admin/ManageGallery";
 
 //App Page
 export default function App() {
@@ -31,6 +33,7 @@ export default function App() {
             {/* Admin */}
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/services" element={<ManageServices />} />
+            <Route path="/admin/gallery" element={<ManageGallery />} />
           </Routes>
         </main>
 

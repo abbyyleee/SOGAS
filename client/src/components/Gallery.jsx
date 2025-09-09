@@ -19,41 +19,24 @@ export default function Gallery() {
   const [images, setImages] = useState([]);
   const [status, setStatus] = useState({ type: "loading", message: "Loading..." });
 
-  // Lightbox state
   const [openIndex, setOpenIndex] = useState(null);
   const closeBtnRef = useRef(null);
 
-  // Fetch images (API first -> local fallback)
   useEffect(() => {
     let mounted = true;
 
-    const fetchJSON = async (url) => {
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-      return res.json();
-    };
-
     (async () => {
-      setStatus({ type: "loading", message: "Loading..." });
-
       try {
-        const api = await fetchJSON("/api/gallery");
+        const res = await fetch("http://localhost:3000/api/gallery");
+        const data = await res.json();
         if (!mounted) return;
-        setImages(Array.isArray(api?.images) ? api.images : []);
+        setImages(data);
         setStatus({ type: "idle", message: "" });
-        return;
-      } catch {}
-
-      try {
-        const local = await fetchJSON("/images/gallery.json");
-        if (!mounted) return;
-        setImages(Array.isArray(local?.images) ? local.images : []);
-        setStatus({ type: "idle", message: "" });
-      } catch {
+      } catch (err) {
         if (!mounted) return;
         setStatus({
           type: "error",
-          message: "Could not load gallery. Check /api/gallery or /public/images/gallery.json.",
+          message: "Could not load gallery. Check /api/gallery.",
         });
       }
     })();
@@ -63,7 +46,6 @@ export default function Gallery() {
     };
   }, []);
 
-  // Open / Close helpers
   const openLightbox = (idx) => setOpenIndex(idx);
   const closeLightbox = () => setOpenIndex(null);
 
@@ -71,16 +53,15 @@ export default function Gallery() {
     e?.stopPropagation?.();
     setOpenIndex((i) => (i === null ? null : (i + images.length - 1) % images.length));
   };
+
   const showNext = (e) => {
     e?.stopPropagation?.();
     setOpenIndex((i) => (i === null ? null : (i + 1) % images.length));
   };
 
-  // Keyboard controls when lightbox is open
   useEffect(() => {
     if (openIndex === null) return;
 
-    // Prevent body scroll while open
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -91,14 +72,12 @@ export default function Gallery() {
     };
     window.addEventListener("keydown", onKey);
 
-    // Focus close button on open
     setTimeout(() => closeBtnRef.current?.focus?.(), 0);
 
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openIndex]);
 
   return (
@@ -106,9 +85,7 @@ export default function Gallery() {
       id="gallery"
       className="w-full min-h-screen bg-light-blue text-deep-blue pt-[96px] pb-16"
     >
-      {/* Full-bleed */}
       <div className="px-4 sm:px-6 lg:px-10">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -116,16 +93,13 @@ export default function Gallery() {
           className="mb-8 sm:mb-10"
         >
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Gallery</h1>
-          <p className="mt-3 max-w-2xl text-deep-blue/80">A simple, premium showcase of our work.</p>
           <div className="mt-6 h-[3px] w-24 rounded-full bg-gradient-to-r from-reg-blue via-soft-blue to-light-blue" />
         </motion.div>
 
-        {/* States */}
         {status.type === "loading" && <div className="text-deep-blue/70">Loading gallery…</div>}
         {status.type === "error" && <div className="text-red-600 font-medium">{status.message}</div>}
         {status.type === "idle" && images.length === 0 && <div className="text-deep-blue/70">No images yet.</div>}
 
-        {/* Grid (larger tiles) */}
         {images.length > 0 && (
           <motion.ul
             variants={container}
@@ -149,8 +123,8 @@ export default function Gallery() {
               >
                 <div className="aspect-[16/10]">
                   <img
-                    src={img.src}
-                    alt={img.alt || "Gallery image"}
+                    src={img.url}
+                    alt={img.caption || "Gallery image"}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-[1500ms] group-hover:scale-105"
                   />
@@ -158,10 +132,10 @@ export default function Gallery() {
 
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                {(img.caption || img.alt) && (
+                {img.caption && (
                   <div className="pointer-events-none absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                     <span className="inline-block text-white/95 text-xs md:text-sm font-medium bg-black/35 backdrop-blur-[2px] rounded-md px-2 py-1">
-                      {img.caption || img.alt}
+                      {img.caption}
                     </span>
                   </div>
                 )}
@@ -171,7 +145,6 @@ export default function Gallery() {
         )}
       </div>
 
-      {/* LIGHTBOX */}
       <AnimatePresence>
         {openIndex !== null && images[openIndex] && (
           <motion.div
@@ -180,11 +153,10 @@ export default function Gallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={closeLightbox} // click backdrop to close
+            onClick={closeLightbox}
             aria-modal="true"
             role="dialog"
           >
-            {/* Content wrapper to stop propagation so clicks on image/buttons don't close */}
             <motion.div
               className="relative max-w-[92vw] max-h-[86vh] w-[92vw] md:w-[80vw]"
               initial={{ scale: 0.98, y: 8, opacity: 0 }}
@@ -192,23 +164,20 @@ export default function Gallery() {
               exit={{ scale: 0.98, y: 8, opacity: 0, transition: { duration: 0.2 } }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Image */}
               <div className="w-full h-auto">
                 <img
-                  src={images[openIndex].src}
-                  alt={images[openIndex].alt || "Expanded image"}
+                  src={images[openIndex].url}
+                  alt={images[openIndex].caption || "Expanded image"}
                   className="w-full h-[70vh] md:h-[76vh] object-contain rounded-xl shadow-2xl bg-black/20"
                 />
               </div>
 
-              {/* Caption */}
-              {(images[openIndex].caption || images[openIndex].alt) && (
+              {images[openIndex].caption && (
                 <div className="mt-3 text-center text-white/90 text-sm md:text-base">
-                  {images[openIndex].caption || images[openIndex].alt}
+                  {images[openIndex].caption}
                 </div>
               )}
 
-              {/* Close button */}
               <button
                 ref={closeBtnRef}
                 onClick={closeLightbox}
@@ -218,7 +187,6 @@ export default function Gallery() {
                 Close
               </button>
 
-              {/* Prev / Next controls */}
               {images.length > 1 && (
                 <>
                   <button

@@ -7,12 +7,19 @@ import api from "../../lib/api";
 export default function Services() {
     const [services, setServices] = useState([]);
 
+    //Animation controls
+    const controls = useAnimation();
+    const sectionRef = useRef(null);
+    const inView = useInView(sectionRef, { amount: 0.3, margin: "-10% 0px -10% 0px "});
+
     useEffect(() => {
         async function fetchServices() {
             try {
                 const res = await api.get("/services");
-                const activeServices = res.data.filter(service => service.status.toLowerCase() === "active");
+                const activeServices = res.data.filter(
+                    (service) => service.status.toLowerCase() === "active");
                 setServices(activeServices);
+                
             } catch (error) {
                 console.error("Error fetching services:", error);
             }
@@ -57,7 +64,7 @@ export default function Services() {
                             custom={index}
                             initial="hidden"
                             whileInView="visible"
-                            viewport={{ once: true, amount: 0.3 }}
+                            viewport={{ once: false, amount: 0.3 }}
                             variants={fadeUp}
                             className="bg-deep-blue text-white rounded-2xl p-6 shadow-2xl
                                        hover:scale-105 hover:shadow-rust
