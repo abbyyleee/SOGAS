@@ -98,7 +98,7 @@ export default function Mission() {
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.6 } },
               }}
-              className="bg-rust text-dark-navy hover:text-light-blue font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition duration-300 hover:scale-105"
+              className="bg-rust text-dark-navy hover:text-dark-navy font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition duration-300 hover:scale-105"
             >
               Contact Us
             </motion.button>
