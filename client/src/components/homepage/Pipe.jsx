@@ -1,4 +1,4 @@
-// src/components/homepage/Pictures1.jsx
+// src/components/homepage/Pipe.jsx
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
@@ -23,7 +23,7 @@ export default function Pipe({
   images = ["/images/kinder.jpg", "/images/train.JPG", "/images/slide.JPG"],
   id = "pipe",
   heading = "Projects",
-  subheading = "Installations and field work",
+  subheading = "Installations and Field Work",
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { amount: 0.2, once: true });

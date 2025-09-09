@@ -394,7 +394,7 @@ export default function Admin() {
               </div>
               <div className="mt-4 flex gap-2">
                 <a
-                  href="/admin/company"
+                  href="/admin/info"
                   className="px-3 py-1.5 rounded-xl bg-deep-blue hover:bg-soft-blue text-white transition ring-1 ring-light-blue/30 text-sm"
                 >
                   Edit Company Info

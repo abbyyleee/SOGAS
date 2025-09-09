@@ -16,6 +16,8 @@ import Admin from "./components/admin/Admin.jsx";
 import ManageServices from "./components/admin/ManageServices";
 // Import Manage Gallery
 import ManageGallery from "./components/admin/ManageGallery";
+// Import Manage Info
+import ManageInfo from "./components/admin/ManageInfo";
 
 //App Page
 export default function App() {
@@ -34,6 +36,7 @@ export default function App() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/services" element={<ManageServices />} />
             <Route path="/admin/gallery" element={<ManageGallery />} />
+            <Route path="/admin/info" element={<ManageInfo />} />
           </Routes>
         </main>
 

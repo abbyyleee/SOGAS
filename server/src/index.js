@@ -13,6 +13,7 @@ import dotenv from "dotenv";
 import adminRoutes from "../routes/admin.js";
 import serviceRoutes from "../routes/services.js";
 import galleryRoutes from "../routes/gallery.js";
+import infoRoutes from "../routes/info.js";
 
 
 dotenv.config();
@@ -51,6 +52,7 @@ app.use(express.json({ limit: "50kb" }));
 app.use("/api", adminRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/gallery", galleryRoutes);
+app.use("/api/info", infoRoutes);
 
 // --- /api/health route for admin panel ---
 app.get("/api/health", (_req, res) => {
