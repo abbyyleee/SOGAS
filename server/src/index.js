@@ -8,12 +8,14 @@ import rateLimit from "express-rate-limit";
 import nodemailer from "nodemailer";
 import { z } from "zod";
 import dotenv from "dotenv";
+import { db } from "../db/database.js";
 
 // Routes
 import adminRoutes from "../routes/admin.js";
 import serviceRoutes from "../routes/services.js";
 import galleryRoutes from "../routes/gallery.js";
 import infoRoutes from "../routes/info.js";
+import siteVisitsRoutes from "../routes/site_visits.js";
 
 
 dotenv.config();
@@ -53,6 +55,7 @@ app.use("/api", adminRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/info", infoRoutes);
+app.use("/api/site_visits", siteVisitsRoutes);
 
 // --- /api/health route for admin panel ---
 app.get("/api/health", (_req, res) => {
@@ -167,6 +170,12 @@ app.post("/api/contact", async (req, res) => {
         to: EMAIL_TO,
       },
     });
+
+    //Log inquiries for stats
+    await db.query(
+      "INSERT INTO inquiries (name, email, subject, message) VALUES (?, ?, ?, ?)",
+      [data.name, data.email, data.subject || "", data.message]
+    );
 
     return res.status(200).json({
       success: true,

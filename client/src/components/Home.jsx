@@ -13,8 +13,17 @@ import About from './homepage/About'
 //Import Contact Section
 import Contact from './homepage/Contact'
 
+import { useEffect } from 'react'
+
+
 //Complete Home Page
 export default function Home() {
+
+    // Track Site Visit
+    useEffect(() => {
+    fetch("http://localhost:3000/api/site_visits", { method: "POST" });
+    }, []);
+
     return (
         <>
             

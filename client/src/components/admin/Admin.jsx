@@ -23,6 +23,7 @@ const cardVariants = {
   show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35 } },
 };
 
+
 /* Shared UI */
 function SectionHeader({ title, subtitle, right }) {
   return (
@@ -110,8 +111,8 @@ export default function Admin() {
 
   /* Reports */
   const [stats, setStats] = useState({ visits7d: null, inquiries7d: null });
-
   console.log("API_BASE:", API_BASE);
+
   useEffect(() => {
     let mounted = true;
     async function loadHealth() {
@@ -157,6 +158,21 @@ export default function Admin() {
       setTimeout(() => setCopyOk(false), 1500);
     } catch {}
   }
+
+  // Fetch Stats
+useEffect(() => {
+  async function fetchStats() {
+    try {
+      const res = await fetch(`${API_BASE}/api/site_visits/stats`);
+      const data = await res.json();
+      setStats(data);
+
+    } catch (err) {
+      console.error("Failed to fetch stats:", err);
+    }
+  }
+  fetchStats();
+}, []);
 
   return (
     <div className="min-h-screen bg-deep-blue">
