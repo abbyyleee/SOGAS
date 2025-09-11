@@ -1,5 +1,5 @@
 // src/components/homepage/Contact.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 // Only Keep digits for Phone#
@@ -19,7 +19,6 @@ function formatPhoneForDisplay(raw) {
 }
 
 export default function Contact() {
-  // ---- Form State ----
   const [form, setForm] = useState({
     name: "",
     company: "",
@@ -29,15 +28,28 @@ export default function Contact() {
     message: "",
   });
 
-  // Status Banner: idle | loading | success | error
   const [status, setStatus] = useState({ type: "idle", message: "" });
+
+  // Site Info (phone + address)
+  const [siteInfo, setSiteInfo] = useState({ phone: "", address: "" });
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/info")
+      .then((res) => res.json())
+      .then((data) => {
+        setSiteInfo({
+          phone: data.phone || "",
+          address: data.address || "",
+        });
+      })
+      .catch((err) => console.error("Failed to fetch site info", err));
+  }, []);
 
   function onChange(e) {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
   }
 
-  // Special onChange for phone: store digits; display formatted
   function onChangePhone(e) {
     const digits = onlyDigits(e.target.value).slice(0, 10);
     setForm((f) => ({ ...f, phone: digits }));
@@ -71,16 +83,15 @@ export default function Contact() {
     setStatus({ type: "loading", message: "Sending…" });
 
     try {
-      const res = await fetch("http://localhost:4000/api/contact", {
+      const res = await fetch("http://localhost:3000/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name.trim(),
           email: form.email.trim(),
           message: form.message.trim(),
-          // Optional Fields
           company: form.company.trim() || undefined,
-          phone: form.phone.trim() || undefined, // <- digits only
+          phone: form.phone.trim() || undefined,
           subject: form.subject.trim() || undefined,
         }),
       });
@@ -110,10 +121,7 @@ export default function Contact() {
   }
 
   return (
-    <section
-      id="contact"
-      className="relative w-full bg-deep-blue py-16 px-6 flex justify-center"
-    >
+    <section id="contact" className="relative w-full bg-deep-blue py-16 px-6 flex justify-center">
       <motion.div
         initial={{ opacity: 0, y: 28 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -124,40 +132,32 @@ export default function Contact() {
         {/* LEFT — Get In Touch */}
         <div className="w-full md:w-1/2 bg-gray p-10 md:p-12 flex flex-col justify-start text-dark-navy">
           <div>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-              Get In Touch
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">Get In Touch</h2>
             <span className="block h-1 w-20 rounded-full bg-rust mt-3" />
             <p className="mt-4 leading-relaxed font-semibold">
               Questions, quotes, or emergency service — we’re ready to help.
             </p>
 
             <ul className="mt-8 space-y-6 font-semibold">
+              {/* Address with preserved line breaks */}
               <InfoItem
                 title="Head Office"
                 icon={
-                  <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z" />
                   </svg>
                 }
               >
-                4565 Cypress Street Suite 110-2
-                <br />
-                West Monroe, LA 71291
+                <span style={{ whiteSpace: "pre-line" }}>
+                  {siteInfo.address ||
+                    "4565 Cypress Street Suite 110-2\nWest Monroe, LA 71291"}
+                </span>
               </InfoItem>
 
               <InfoItem
                 title="Email"
                 icon={
-                  <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 4H4a2 2 0 0 0-2 2v.4l10 6.25L22 6.4V6a2 2 0 0 0-2-2Zm2 5.2-9.2 5.75a2 2 0 0 1-2.1 0L1.5 9.2V18a2 2 0 0 0 2 2h17a 2 2 0 0 0 2-2V9.2Z" />
                   </svg>
                 }
@@ -168,17 +168,12 @@ export default function Contact() {
               <InfoItem
                 title="Phone"
                 icon={
-                  <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M6.6 10.8a15.9 15.9 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37 12 12 0 0 0 3.77.6 1.5 1.5 0 0 1 1.5 1.5V20a2 2 0 0 1-2 2A18 18 0 0 1 2 6a2 2 0 0 1 2-2h2.07A1.5 1.5 0 0 1 7.6 5.5a12 12 0 0 0 .6 3.77 1.5 1.5 0 0 1-.37 1.53l-1.23 1.99Z" />
                   </svg>
                 }
               >
-                (318) 355-4443
-                <br />
+                {siteInfo.phone ? formatPhoneForDisplay(siteInfo.phone) : "(318) 355-4443"}
               </InfoItem>
             </ul>
           </div>
@@ -192,8 +187,7 @@ export default function Contact() {
             </h3>
             <span className="block h-1 w-20 rounded-full bg-rust mt-3" />
             <p className="mt-4 text-dark-navy font-semibold">
-              Fill out the form and we’ll respond quickly. <br/>
-              * Marks Required Fields
+              Fill out the form and we’ll respond quickly. <br />* Marks Required Fields
             </p>
 
             {/* Status banner */}
@@ -353,14 +347,5 @@ function InfoItem({ title, icon, children }) {
         <p className="text-dark-navy">{children}</p>
       </div>
     </li>
-  );
-}
-
-function Badge({ title, subtitle }) {
-  return (
-    <div className="rounded-lg border border-rust bg-white p-4">
-      <p className="font-semibold text-dark-navy">{title}</p>
-      <p className="text-deep-blue/80">{subtitle}</p>
-    </div>
   );
 }

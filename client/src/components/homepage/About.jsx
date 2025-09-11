@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
@@ -19,15 +20,23 @@ function StatCard({ end, suffix, label, duration = 2 }) {
 }
 
 export default function About() {
+  const [aboutDescription, setAboutDescription] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/info")
+      .then((res) => res.json())
+      .then((data) => setAboutDescription(data.about_description || ""))
+      .catch((err) => console.error("Error fetching about info:", err));
+  }, []);
+
   return (
     <section id="about" className="relative w-full bg-white text-deep-blue overflow-hidden">
-     {/* TOP DIAGONAL DIVIDER (flipped upright) */}
+      {/* TOP DIAGONAL DIVIDER (flipped upright) */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
         <svg viewBox="0 0 500 100" preserveAspectRatio="none" className="w-full h-16">
           <path d="M0,0 C150,100 350,0 500,100 L500,0 L0,0 Z" fill="#FFDE00" />
         </svg>
       </div>
-
 
       {/* TOP CONTENT */}
       <div className="max-w-screen-xl mx-auto grid lg:grid-cols-2 gap-12 items-center px-6 md:px-16 py-12">
@@ -44,10 +53,10 @@ export default function About() {
           </h2>
 
           <p className="text-base leading-relaxed font-semibold">
-            SOGAS is a Louisiana interstate pipeline energy support company specializing in the
+            {aboutDescription || `SOGAS is a Louisiana interstate pipeline energy support company specializing in the
             installation of natural gas facilities to provide reliable natural gas supply services
             as well as natural gas marketing, operations & maintenance, and regulatory compliance
-            services for clients with existing pipeline facilities.
+            services for clients with existing pipeline facilities.`}
           </p>
 
           <div className="space-y-4">

@@ -1,25 +1,38 @@
-import { useRef, useEffect } from "react"
-import { useInView, useAnimation, motion } from "framer-motion"
+import { useRef, useEffect, useState } from "react";
+import { useInView, useAnimation, motion } from "framer-motion";
 
 export default function Mission() {
-  const ref = useRef(null)
-  const inView = useInView(ref, { threshold: 0.9, once: true })
+  const ref = useRef(null);
+  const inView = useInView(ref, { threshold: 0.9, once: true });
 
-  const titleControls = useAnimation()
-  const textControls = useAnimation()
-  const buttonControls = useAnimation()
-  const imageControls = useAnimation()
-  const accentControls = useAnimation()
+  const titleControls = useAnimation();
+  const textControls = useAnimation();
+  const buttonControls = useAnimation();
+  const imageControls = useAnimation();
+  const accentControls = useAnimation();
+
+  const [missionTitle, setMissionTitle] = useState("");
+  const [missionDescription, setMissionDescription] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/info")
+      .then((res) => res.json())
+      .then((data) => {
+        setMissionTitle(data.mission_title || "");
+        setMissionDescription(data.mission_description || "");
+      })
+      .catch((err) => console.error("Error fetching mission info:", err));
+  }, []);
 
   useEffect(() => {
     if (inView) {
-      titleControls.start("visible")
-      textControls.start("visible")
-      buttonControls.start("visible")
-      imageControls.start("visible")
-      accentControls.start("visible")
+      titleControls.start("visible");
+      textControls.start("visible");
+      buttonControls.start("visible");
+      imageControls.start("visible");
+      accentControls.start("visible");
     }
-  }, [inView, titleControls, textControls, buttonControls, imageControls, accentControls])
+  }, [inView, titleControls, textControls, buttonControls, imageControls, accentControls]);
 
   return (
     <>
@@ -73,7 +86,7 @@ export default function Mission() {
               }}
               className="text-3xl md:text-4xl font-bold text-dark-navy mb-4"
             >
-              Our mission is to deliver safe and reliable natural gas solutions with integrity and expertise.
+              {missionTitle || "Our mission is to deliver safe and reliable natural gas solutions with integrity and expertise."}
             </motion.h2>
 
             <motion.p
@@ -85,10 +98,10 @@ export default function Mission() {
               }}
               className="text-dark-navy font-semibold mb-6 max-w-xl"
             >
-              Southern Gas Services has proudly served the energy sector for over 30 years delivering tailored
-              natural gas solutions with dedication and precision. <br />
+              {missionDescription || `Southern Gas Services has proudly served the energy sector for over 30 years delivering tailored
+              natural gas solutions with dedication and precision. 
               SOGAS supports small and mid-sized industrial clients as well as midstream and municipal services
-              across the Gulf Coast with dependable, high-quality supply, and support services.
+              across the Gulf Coast with dependable, high-quality supply, and support services.`}
             </motion.p>
 
             <motion.button
@@ -155,5 +168,5 @@ export default function Mission() {
         </svg>
       </div>
     </>
-  )
+  );
 }
