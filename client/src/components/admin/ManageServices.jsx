@@ -1,4 +1,4 @@
-// src/components/admin/ManageServices.jsx
+// ManageServices.jsx
 
 import { useEffect } from "react";
 import { useState } from "react";
@@ -41,6 +41,7 @@ export default function ManageServices() {
     
     return (
         <div className="min-h-screen bg-deep-blue text-white px-10 py-24 mx-auto">
+            
             {/* Back To Dashboard */}
             <div className="mb-8">
                 <Link
@@ -51,7 +52,7 @@ export default function ManageServices() {
                 </Link>    
             </div>
 
-            {/* Page Title */}
+            {/* Title */}
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

@@ -1,3 +1,5 @@
+// Mission.jsx
+
 import { useRef, useEffect, useState } from "react";
 import { useInView, useAnimation, motion } from "framer-motion";
 
@@ -36,7 +38,7 @@ export default function Mission() {
 
   return (
     <>
-      {/* TOP DIVIDER – Yellow Diagonal */}
+      {/* TOP DIVIDER */}
       <div className="w-full overflow-hidden leading-none bg-white" aria-hidden="true">
         <svg
           viewBox="0 0 1440 80"
@@ -157,7 +159,7 @@ export default function Mission() {
         </div>
       </section>
 
-      {/* BOTTOM DIVIDER – Yellow Diagonal */}
+      {/* BOTTOM DIVIDER */}
       <div className="w-full overflow-hidden leading-none bg-white" aria-hidden="true">
         <svg
           viewBox="0 0 1440 80"

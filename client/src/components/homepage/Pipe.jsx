@@ -1,4 +1,5 @@
-// src/components/homepage/Pipe.jsx
+// Pipe.jsx
+
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
@@ -33,7 +34,6 @@ export default function Pipe({
       id={id}
       className="relative w-full bg-deep-blue text-white py-20 px-6 md:px-16 overflow-hidden"
     >
-      {/* subtle vignette + gradient sheen */}
       <div className="pointer-events-none absolute inset-0 opacity-60">
         <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-white/5" />
         <div className="absolute -top-24 -left-32 h-72 w-72 rounded-full bg-light-blue/10 blur-3xl" />
@@ -41,6 +41,7 @@ export default function Pipe({
       </div>
 
       <div className="relative max-w-screen-xl mx-auto">
+        
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -83,7 +84,7 @@ export default function Pipe({
                   className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
                   loading="lazy"
                 />
-                {/* glossy sweep on hover */}
+                
                 <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute -inset-x-10 -top-1/2 h-[200%] rotate-12 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                 </div>

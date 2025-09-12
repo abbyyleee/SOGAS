@@ -1,4 +1,5 @@
-// src/components/Gallery.jsx
+// Gallery.jsx
+
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -181,7 +182,7 @@ export default function Gallery() {
               <button
                 ref={closeBtnRef}
                 onClick={closeLightbox}
-                className="absolute top-3 right-3 rounded-lg px-3 py-2 bg-rust text-dark-navy hover:bg-white/20 text-white text-sm font-medium backdrop-blur transition focus:outline-none focus:ring-2 focus:ring-white/60"
+                className="absolute top-3 right-3 rounded-lg px-3 py-2 bg-rust text-dark-navy hover:bg-light-blue text-sm font-medium backdrop-blur transition focus:outline-none focus:ring-2 focus:ring-white/60"
                 aria-label="Close"
               >
                 Close
@@ -191,14 +192,14 @@ export default function Gallery() {
                 <>
                   <button
                     onClick={showPrev}
-                    className="absolute left-2 md:left-3 top-1/2 -translate-y-1/2 rounded-full w-10 h-10 md:w-12 md:h-12 bg-rust text-dark-navy hover:bg-white/20 text-white text-xl backdrop-blur flex items-center justify-center transition focus:outline-none focus:ring-2 focus:ring-white/60"
+                    className="absolute left-2 md:left-3 top-1/2 -translate-y-1/2 rounded-full w-10 h-10 md:w-12 md:h-12 bg-rust text-dark-navy hover:bg-light-blue text-xl backdrop-blur flex items-center justify-center transition focus:outline-none focus:ring-2 focus:ring-white/60"
                     aria-label="Previous"
                   >
                     ‹
                   </button>
                   <button
                     onClick={showNext}
-                    className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 rounded-full w-10 h-10 md:w-12 md:h-12 bg-rust text-dark-navy hover:bg-white/20 text-white text-xl backdrop-blur flex items-center justify-center transition focus:outline-none focus:ring-2 focus:ring-white/60"
+                    className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 rounded-full w-10 h-10 md:w-12 md:h-12 bg-rust text-dark-navy hover:bg-light-blue text-xl backdrop-blur flex items-center justify-center transition focus:outline-none focus:ring-2 focus:ring-white/60"
                     aria-label="Next"
                   >
                     ›

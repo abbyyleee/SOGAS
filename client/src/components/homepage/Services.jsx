@@ -1,4 +1,4 @@
-// client/src/components/homepage/Services.jsx
+// Services.jsx
 
 import { useEffect, useState, useRef } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
@@ -7,7 +7,6 @@ import api from "../../lib/api";
 export default function Services() {
   const [services, setServices] = useState([]);
 
-  // Match Mission.jsx style
   const ref = useRef(null);
   const inView = useInView(ref, { threshold: 0.9, once: true });
   const controls = useAnimation();
@@ -52,7 +51,7 @@ export default function Services() {
       className="relative w-full py-20 bg-center"
       style={{ backgroundImage: "url('/textures/gray-carbon.png')" }}
     >
-      {/* Gray Overlay */}
+      {/* Overlay */}
       <div className="absolute inset-0 z-0 bg-gray/50"></div>
 
       <div className="max-w-screen-xl mx-auto relative z-10 text-white">
@@ -63,7 +62,7 @@ export default function Services() {
           Southern Gas Services provides a full range of industrial-grade gas solutions with safety, efficiency, and precision at the forefront.
         </p>
 
-        {/* Sentinel div to trigger animations like in Mission.jsx */}
+
         <div ref={ref} className="h-1 w-full"></div>
 
         <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

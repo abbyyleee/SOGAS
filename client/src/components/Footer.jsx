@@ -1,4 +1,4 @@
-//Footer Section
+// Footer.jsx
 export default function Footer() {
     return (
         <footer className="w-full bg-dark-navy text-white py-6">

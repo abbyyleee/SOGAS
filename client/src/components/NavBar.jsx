@@ -1,4 +1,5 @@
-// src/components/NavBar.jsx
+// NavBar.jsx
+
 import { Link as ScrollLink } from "react-scroll";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
@@ -10,10 +11,10 @@ export default function NavBar() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-dark-navy/90 backdrop-blur-md text-white shadow-md">
       <div className="container mx-auto py-4 px-4 flex items-center justify-between">
 
-        {/* Logo + Company Title (same layout/feel as your original) */}
+        {/* Logo + Company Title */}
         <RouterLink to="/" className="flex items-center space-x-3">
           <img
-            src="/sogas-logo.png"     // put the file at: public/sogas-logo.png
+            src="/sogas-logo.png"    
             alt="SOGAS Logo"
             className="h-12 w-auto object-contain block"
           />
@@ -24,12 +25,13 @@ export default function NavBar() {
 
         {/* Nav links (desktop) */}
         <nav className="hidden md:flex items-center space-x-8">
+          
           {/* Home always routes to "/" */}
           <RouterLink to="/" className="text-white hover:text-soft-blue transition">
             Home
           </RouterLink>
 
-          {/* Section links: smooth scroll on home; route back when off home */}
+          {/* Section links: smooth scroll on home */}
           {isHome ? (
             <>
               <ScrollLink

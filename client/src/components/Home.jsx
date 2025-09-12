@@ -1,19 +1,13 @@
-//Import Hero Section
-import Hero from './homepage/Hero'
-//Imoort Mission Section
-import Mission from './homepage/Mission'
-//Import Pipeline Section
-import Pipe from './homepage/Pipe'
-//Import Services Section
-import Services from './homepage/Services'
-//Import Crew Section
-import Crew from './homepage/Crew'
-//Import About Section
-import About from './homepage/About'
-//Import Contact Section
-import Contact from './homepage/Contact'
+// Home.jsx
 
-import { useEffect } from 'react'
+import Hero from './homepage/Hero';
+import Mission from './homepage/Mission';
+import Pipe from './homepage/Pipe';
+import Services from './homepage/Services';
+import Crew from './homepage/Crew';
+import About from './homepage/About';
+import Contact from './homepage/Contact';
+import { useEffect } from 'react';
 
 
 //Complete Home Page

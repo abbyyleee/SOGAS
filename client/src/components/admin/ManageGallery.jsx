@@ -1,3 +1,4 @@
+// ManageGallery.jsx
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -96,7 +97,7 @@ export default function ManageGallery() {
     return (
         <div className="min-h-screen bg-deep-blue text-white px-10 py-24 mx-auto">
 
-            {/* BAck To Dashboard */}
+            {/* Back To Dashboard */}
             <div className="mb-8">
                 <Link
                     to="/admin"

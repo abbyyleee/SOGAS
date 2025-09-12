@@ -1,4 +1,4 @@
-// client/src/components/homepage/Hero.jsx
+// Hero.jsx
 
 import { useEffect, useState } from "react";
 

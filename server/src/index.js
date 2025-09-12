@@ -1,10 +1,8 @@
-// server/src/index.js
+// index.js
 
 import express from "express";
-import { Router } from "express";
 import cors from "cors";
 import helmet from "helmet";
-import rateLimit from "express-rate-limit";
 import nodemailer from "nodemailer";
 import { z } from "zod";
 import dotenv from "dotenv";
@@ -56,6 +54,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/info", infoRoutes);
 app.use("/api/site_visits", siteVisitsRoutes);
+
 
 // --- /api/health route for admin panel ---
 app.get("/api/health", (_req, res) => {

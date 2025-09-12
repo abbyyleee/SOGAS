@@ -1,11 +1,7 @@
-// src/pages/Admin.jsx
+// Admin.jsx
+
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-/**
- * USE ONLY YOUR NAMED COLORS:
- * dark-navy • deep-blue • soft-blue • light-blue • white • rust
- */
 
 const OWNER_NAME = "Abby Lee";
 const OWNER_EMAIL = "abbychrislee@gmail.com";
@@ -41,7 +37,6 @@ function SectionHeader({ title, subtitle, right }) {
 }
 
 function Badge({ tone = "neutral", children }) {
-  // ok => soft-blue outline; warn => rust; neutral => light-blue
   const cls =
     tone === "ok"
       ? "bg-emerald-500 text-deep-blue font-bold ring-1 ring-soft-blue/40"
@@ -104,6 +99,7 @@ function IconCopy() {
 }
 
 export default function Admin() {
+
   /* Health */
   const [health, setHealth] = useState(null);
   const [healthError, setHealthError] = useState("");
@@ -176,6 +172,7 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen bg-deep-blue">
+
       {/* Top Bar */}
       <motion.header
         variants={fadeIn}
@@ -201,6 +198,7 @@ useEffect(() => {
 
       {/* Content */}
       <main className="max-w-7xl mx-auto px-4 py-10 space-y-10">
+
         {/* Site Health */}
         <section>
           <SectionHeader
@@ -251,7 +249,7 @@ useEffect(() => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={copyIncidentNote}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-deep-blue hover:bg-soft-blue text-white transition ring-1 ring-light-blue/30"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-deep-blue hover:bg-rust hover:text-dark-navy text-white transition ring-1 ring-light-blue/30"
                 >
                   <IconCopy />
                   <span className="text-sm">Copy incident note</span>
@@ -290,8 +288,9 @@ useEffect(() => {
 
         {/* Content Management */}
         <section>
-          <SectionHeader title="Content Management" subtitle="Keep public site content up to date." />
+          <SectionHeader title="Content Management" subtitle="Keep public site content up to date" />
           <div className="grid sm:grid-cols-3 gap-4">
+            
             <motion.div
               variants={cardVariants}
               initial="hidden"
@@ -311,13 +310,13 @@ useEffect(() => {
               <div className="mt-4 flex gap-2">
                 <a
                   href="/admin/services"
-                  className="px-3 py-1.5 rounded-xl bg-deep-blue hover:bg-soft-blue text-white transition ring-1 ring-light-blue/30 text-sm"
+                  className="px-3 py-1.5 rounded-xl bg-deep-blue hover:bg-rust hover:text-dark-navy text-white transition ring-1 ring-light-blue/30 text-sm"
                 >
                   Manage Services
                 </a>
               </div>
             </motion.div>
-
+            
             <motion.div
               variants={cardVariants}
               initial="hidden"
@@ -337,13 +336,13 @@ useEffect(() => {
               <div className="mt-4 flex gap-2">
                 <a
                   href="/admin/gallery"
-                  className="px-3 py-1.5 rounded-xl bg-deep-blue hover:bg-soft-blue text-white transition ring-1 ring-light-blue/30 text-sm"
+                  className="px-3 py-1.5 rounded-xl bg-deep-blue hover:bg-rust hover:text-dark-navy text-white transition ring-1 ring-light-blue/30 text-sm"
                 >
                   Manage Gallery
                 </a>
               </div>
             </motion.div>
-
+            
             <motion.div
               variants={cardVariants}
               initial="hidden"
@@ -357,24 +356,25 @@ useEffect(() => {
                 </div>
                 <div>
                   <div className="font-semibold text-dark-navy">Company Info</div>
-                  <div className="text-sm text-dark-navy">About, contact, hours</div>
+                  <div className="text-sm text-dark-navy">Homepage info</div>
                 </div>
               </div>
               <div className="mt-4 flex gap-2">
                 <a
                   href="/admin/info"
-                  className="px-3 py-1.5 rounded-xl bg-deep-blue hover:bg-soft-blue text-white transition ring-1 ring-light-blue/30 text-sm"
+                  className="px-3 py-1.5 rounded-xl bg-deep-blue hover:bg-rust hover:text-dark-navy text-white transition ring-1 ring-light-blue/30 text-sm"
                 >
                   Edit Company Info
                 </a>
               </div>
             </motion.div>
+
           </div>
         </section>
 
         {/* Reports / Stats */}
         <section>
-          <SectionHeader title="Reports & Stats" subtitle="High-level visibility at a glance." />
+          <SectionHeader title="Reports & Stats" subtitle="Weekly visits and inquires" />
           <motion.div
             variants={fadeIn}
             initial="hidden"

@@ -1,4 +1,5 @@
-// src/components/homepage/Crew.jsx
+// Crew.jsx
+
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 

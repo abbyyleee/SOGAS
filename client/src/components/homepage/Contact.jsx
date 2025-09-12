@@ -1,4 +1,5 @@
-// src/components/homepage/Contact.jsx
+// Contact.jsx
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -139,7 +140,6 @@ export default function Contact() {
             </p>
 
             <ul className="mt-8 space-y-6 font-semibold">
-              {/* Address with preserved line breaks */}
               <InfoItem
                 title="Head Office"
                 icon={
