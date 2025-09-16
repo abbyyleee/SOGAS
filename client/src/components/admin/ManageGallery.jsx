@@ -28,30 +28,36 @@ export default function ManageGallery() {
 
     const handleUpload = async (e) => {
         e.preventDefault();
-        if (!file) {
-            return alert("PLease select a file.");
-        }
-
+        if (!file) return alert("Please select a file.");
+      
         const formData = new FormData();
-        formData.append("image", file);
-        formData.append("caption", caption);
-
+        formData.append("file", file);
+        formData.append("upload_preset", "sogas_gallery");
+      
         try {
-            const res = await api.post("/gallery/upload", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-
-            setImages([...images, {
-                ...res.data,
-                caption: caption
-            }]);
-            setFile(null);
-            setCaption("");
-
+          const cloudRes = await fetch(
+            "https://api.cloudinary.com/v1_1/dhgjjux80/image/upload",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+          const data = await cloudRes.json();
+      
+          const res = await api.post("/gallery/upload", {
+            url: data.secure_url,
+            public_id: data.public_id,
+            caption: caption,
+          });
+      
+          setImages([...images, res.data]);
+          setFile(null);
+          setCaption("");
         } catch (err) {
-            console.error("Upload error:", err);
+          console.error("Upload error:", err);
         }
-    };
+      };
+      
 
     const handleDelete = async (publicId) => {
         const confirm = window.confirm("Are you sure you want to delete this image?");

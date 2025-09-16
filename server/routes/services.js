@@ -1,37 +1,45 @@
-// services.js
-
 import express from "express";
-import { db } from "../db/database.js";
+import sql from "../db/database.js";
 
 const router = express.Router();
 
 // GET all services
 router.get("/", async (req, res) => {
   try {
-    const [results] = await db.query("SELECT * FROM services");
-    res.json(results);
+    const services = await sql`SELECT * FROM services ORDER BY id ASC`;
+    res.json(services);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error fetching services:", err);
+    res.status(500).json({ error: "Database error" });
   }
 });
 
 // GET Active services
-router.get("/active", (req, res) => {
-    db.query("SELECT * FROM services WHERE status = 'Active'", (err, results) => {
-        if (err) return res.status(500).json({ error: err });
-    });
+router.get("/active", async (req, res) => {
+  try {
+    const activeServices = await sql`
+      SELECT * FROM services WHERE status = 'Active'
+    `;
+    res.json(activeServices);
+  } catch (err) {
+    console.error("Error fetching active services:", err);
+    res.status(500).json({ error: "Database error" });
+  }
 });
 
 // POST a new service
 router.post("/", async (req, res) => {
   const { title, description, status } = req.body;
-  const sql = "INSERT INTO services (title, description, status) VALUES (?, ?, ?)";
-
   try {
-    const [result] = await db.query(sql, [title, description, status]);
-    res.status(201).json({ message: "Service Added", id: result.insertId });
+    const [newService] = await sql`
+      INSERT INTO services (title, description, status)
+      VALUES (${title}, ${description}, ${status})
+      RETURNING *
+    `;
+    res.status(201).json({ message: "Service Added", service: newService });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error adding service:", err);
+    res.status(500).json({ error: "Failed to add service" });
   }
 });
 
@@ -41,15 +49,15 @@ router.put("/:id", async (req, res) => {
   const { title, description, status } = req.body;
 
   try {
-    await db.query(
-      "UPDATE services SET title = ?, description = ?, status = ? WHERE id = ?",
-      [title, description, status, id]
-    );
-
-    res.json({ message: "Service Updated", id, status });
-
+    const [updatedService] = await sql`
+      UPDATE services
+      SET title = ${title}, description = ${description}, status = ${status}
+      WHERE id = ${id}
+      RETURNING *
+    `;
+    res.json({ message: "Service Updated", service: updatedService });
   } catch (err) {
-    console.error("Error in PUT /services/:id:", err);
+    console.error("Error updating service:", err);
     res.status(500).json({ error: "Failed to update service" });
   }
 });
@@ -58,10 +66,11 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    await db.query("DELETE FROM services WHERE id=?", [id]);
+    await sql`DELETE FROM services WHERE id = ${id}`;
     res.json({ message: "Service Deleted" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error deleting service:", err);
+    res.status(500).json({ error: "Failed to delete service" });
   }
 });
 

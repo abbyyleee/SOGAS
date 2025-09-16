@@ -1,12 +1,15 @@
 // database.js
 
-import mysql2 from "mysql2/promise";
+import postgres from "postgres";
+import dotenv from "dotenv";
 
-const db = mysql2.createPool({
-    host: "localhost",
-    user: "root",
-    password: "AcL03178312061290@",
-    database: "southern_gas_services"
+dotenv.config();
+
+const connectionString = process.env.DATABASE_URL;
+
+// Initialize connection
+const sql = postgres(connectionString, {
+  ssl: "require",
 });
 
-export { db };
+export default sql;

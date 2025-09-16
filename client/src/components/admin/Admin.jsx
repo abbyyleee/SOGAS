@@ -382,8 +382,8 @@ useEffect(() => {
             viewport={{ once: true }}
             className="grid sm:grid-cols-2 gap-4 font-semibold"
           >
-            <StatCard label="Site Visits (7d)" value={stats.visits7d} hint="Connect analytics later" />
-            <StatCard label="Inquiries (7d)" value={stats.inquiries7d} hint="From contact form" />
+            <StatCard label="Site Visits (7d)" value={stats.visits7d} hint="User visits" />
+            <StatCard label="Inquiries (7d)" value={stats.inquiries7d} hint="Contact submissions" />
           </motion.div>
         </section>
 

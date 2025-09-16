@@ -1,7 +1,7 @@
 // site_visits.js
 
 import express from "express";
-import { db } from "../db/database.js";
+import sql from "../db/database.js";
 
 const router = express.Router();
 
@@ -14,8 +14,8 @@ let lastLogged = null;
  */
 router.post("/", async (req, res) => {
     try {
-        const ip = req.ip;
-        const user = req.headers["user_agent"];
+        const ip = req.ip || null;
+        const user = req.headers["user_agent"] || null;
         const key = `${ip}-${user}`;
 
         // Prevent duplicate log
@@ -24,12 +24,12 @@ router.post("/", async (req, res) => {
         }
         lastLogged = key;
 
-        await db.query(
-            "INSERT INTO site_visits (ip, user_agent) VALUES (?, ?)",
-            [ip, user]
-        );
+        await sql`
+            INSERT INTO site_visits (ip, user_agent)
+            VALUES (${ip}, ${user})
+        `;
         
-        console.log("visit logged:", ip, user);
+        console.log("Visit logged:", ip, user);
         res.json({ success: true });
 
     } catch (err) {
@@ -45,14 +45,18 @@ router.post("/", async (req, res) => {
 router.get("/stats", async (req, res) => {
     try {
         // Count visits
-        const [visitsRow] = await db.query(
-            "SELECT COUNT(*) AS visits7d FROM site_visits WHERE visited_at >= NOW() - INTERVAL 7 DAY"
-        );
+        const visitsRow = await sql`
+            SELECT COUNT(*)::int AS visits7d
+            FROM site_visits
+            WHERE visited_at >= NOW() - INTERVAL '7 days'
+        `;
 
         // Count inquires
-        const [inquiriesRow] = await db.query(
-            "SELECT COUNT(*) AS inquiries7d FROM inquiries WHERE created_at >= NOW() - INTERVAL 7 DAY"
-        );
+        const inquiriesRow = await sql`
+            SELECT COUNT(*)::int AS inquiries7d
+            FROM inquiries
+            WHERE created_at >= NOW() - INTERVAL '7 days'
+        `;
 
         res.json({
             visits7d: visitsRow[0].visits7d,
