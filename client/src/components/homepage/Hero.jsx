@@ -8,7 +8,7 @@ export default function Hero() {
     useEffect(() => {
         async function fetchTagline() {
             try {
-                const res = await fetch("http://localhost:3000/api/info");
+                const res = await fetch("http://sogas-backend.onrender.com/api/info");
                 const data = await res.json();
                 setTagline(data.tagline || "");
             } catch (error) {
@@ -28,7 +28,7 @@ export default function Hero() {
             <div className="absolute inset-0 z-5 bg-gradient-to-t from-black/30 via-black/20 to-transparent">
                 <img
                     src="/gray-pipe.jpg"
-                    alt="Sunset Industrial Pipeline Plant"
+                    alt="Pipeline Project from Kinder"
                     className="h-full w-full object-cover animate-zoom-in"
                 />
                 <div className="absolute inset-0 bg-black/25"></div>

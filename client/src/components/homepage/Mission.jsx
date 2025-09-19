@@ -17,7 +17,7 @@ export default function Mission() {
   const [missionDescription, setMissionDescription] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/info")
+    fetch("http://sogas-backend.onrender.com/api/info")
       .then((res) => res.json())
       .then((data) => {
         setMissionTitle(data.mission_title || "");

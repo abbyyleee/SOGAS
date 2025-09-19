@@ -25,7 +25,7 @@ export default function About() {
   const [aboutDescription, setAboutDescription] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/info")
+    fetch("http://sogas-backend.onrender.com/api/info")
       .then((res) => res.json())
       .then((data) => setAboutDescription(data.about_description || ""))
       .catch((err) => console.error("Error fetching about info:", err));

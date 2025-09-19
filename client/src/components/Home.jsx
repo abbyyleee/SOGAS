@@ -15,7 +15,7 @@ export default function Home() {
 
     // Track Site Visit
     useEffect(() => {
-    fetch("http://localhost:3000/api/site_visits", { method: "POST" });
+    fetch("http://sogas-backend.onrender.com/api/site_visits", { method: "POST" });
     }, []);
 
     return (
