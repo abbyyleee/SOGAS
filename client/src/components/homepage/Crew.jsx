@@ -27,9 +27,9 @@ const card = (index) => ({
 
 export default function Crew({
   images = [
-    "/images/train-guy.JPG",
     "/images/group.JPG",
     "/images/umbrella.jpg",
+    "/images/welders.jpg",
   ],
   id = "crew",
   heading = "Our Crew in Action",
