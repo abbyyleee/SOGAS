@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const OWNER_NAME = "Abby Lee";
 const OWNER_EMAIL = "abbychrislee@gmail.com";
