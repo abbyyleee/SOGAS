@@ -61,7 +61,7 @@ export default function ManageInfo() {
             {/* Back to Dashboard */}
             <div className="mb-8">
                 <Link 
-                    to="/admin"
+                    to="/admin?key=SoGas97"
                     className="inline-block px-4 py-2 rounded-xl bg-rust text-dark-navy hover:bg-soft-blue transition"
                 >
                     ← Back to Admin Dashboard
