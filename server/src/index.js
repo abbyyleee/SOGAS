@@ -19,7 +19,7 @@ const app = express();
 
 // --- Config from .env ---
 const PORT = Number(process.env.PORT || 4000);
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://sogas-backend.onrender.comlocalhost:5173";
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
 
 const EMAIL_TO = process.env.EMAIL_TO; // REQUIRED
 const EMAIL_FROM = process.env.EMAIL_FROM || '"Website" <no-reply@example.com>';
@@ -213,7 +213,7 @@ app.use((err, req, res, next) => {
 
 // --- Start Server ---
 app.listen(PORT, () => {
-  console.log(`SOGAS backend listening on http://sogas-backend.onrender.comlocalhost:${PORT}`);
+  console.log(`SOGAS backend listening on http://localhost:${PORT}`);
 });
 
 // --- Escape HTML Helper ---
