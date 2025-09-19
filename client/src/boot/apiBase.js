@@ -1,7 +1,9 @@
 // apiBase.js
 import axios from "axios";
 
-const BASE = import.meta.env.VITE_API_URL;
+const BASE = 
+    import.meta.env.VITE_API_URL ||
+    (location.hostname === "localhost" ? "http://localhost:3000" : "http://sogas-backend.onrender.com");
 
 // Expose for quick debugging
 if (typeof window !== "undefined") window.__API_BASE__ = BASE;
