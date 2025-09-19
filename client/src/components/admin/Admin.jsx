@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 const OWNER_NAME = "Abby Lee";
 const OWNER_EMAIL = "abbychrislee@gmail.com";
@@ -108,6 +109,19 @@ export default function Admin() {
   /* Reports */
   const [stats, setStats] = useState({ visits7d: null, inquiries7d: null });
   console.log("API_BASE:", API_BASE);
+
+  /* Key */
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const key = params.get("key");
+
+    if (key !== "SoGas97") {
+      navigate("/");
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
     let mounted = true;
