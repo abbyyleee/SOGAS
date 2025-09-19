@@ -26,7 +26,7 @@ cd client<br/>
 npm install<br/>
 npm run dev
 
-- Opens Vite dev server (default: http://localhost:5173)
+- Opens Vite dev server (default: http://sogas-backend.onrender.comlocalhost:5173)
 
 **2. Backend:**<br/>
 cd server<br/>
@@ -47,7 +47,7 @@ NODE_ENV=development<br/>
 
 ## CORS (Frontend Origin)
 
-CORS_ORIGIN=http://localhost:5173
+CORS_ORIGIN=http://sogas-backend.onrender.comlocalhost:5173
 
 ## Email Routing (Placeholder)
 
@@ -128,6 +128,6 @@ For project inquiries or licensing requests, contact:
 
 Abby Lee<br/>
 Email: abbychrislee@gmail.com<br/>
-GitHub: http://github.com/abbyyleee
+GitHub: http://sogas-backend.onrender.comgithub.com/abbyyleee
 
 For Southern Gas Services business inquiries: notices@sogasservices.com
