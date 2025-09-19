@@ -35,7 +35,7 @@ export default function Contact() {
   const [siteInfo, setSiteInfo] = useState({ phone: "", address: "" });
 
   useEffect(() => {
-    fetch("http://sogas-backend.onrender.com/api/info")
+    fetch("https://sogas-backend.onrender.com/api/info")
       .then((res) => res.json())
       .then((data) => {
         setSiteInfo({
@@ -84,7 +84,7 @@ export default function Contact() {
     setStatus({ type: "loading", message: "Sending…" });
 
     try {
-      const res = await fetch("http://sogas-backend.onrender.com/api/contact", {
+      const res = await fetch("https://sogas-backend.onrender.com/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

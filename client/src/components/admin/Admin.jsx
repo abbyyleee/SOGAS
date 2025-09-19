@@ -7,7 +7,7 @@ const OWNER_NAME = "Abby Lee";
 const OWNER_EMAIL = "abbychrislee@gmail.com";
 const OWNER_PHONE = "(318)-953-1464";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://sogas-backend.onrender.com";
+const API_BASE = import.meta.env.VITE_API_BASE || "https://sogas-backend.onrender.com";
 
 /* Animations */
 const fadeIn = {

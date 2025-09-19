@@ -8,7 +8,7 @@ export default function Hero() {
     useEffect(() => {
         async function fetchTagline() {
             try {
-                const res = await fetch("http://sogas-backend.onrender.com/api/info");
+                const res = await fetch("https://sogas-backend.onrender.com/api/info");
                 const data = await res.json();
                 setTagline(data.tagline || "");
             } catch (error) {
