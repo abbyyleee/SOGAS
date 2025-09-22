@@ -12,6 +12,7 @@ import serviceRoutes from "../routes/services.js";
 import galleryRoutes from "../routes/gallery.js";
 import infoRoutes from "../routes/info.js";
 import siteVisitsRoutes from "../routes/site_visits.js";
+import authRoutes from "../routes/auth.js";
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/info", infoRoutes);
 app.use("/api/site_visits", siteVisitsRoutes);
+app.use("/api/auth.js", authRoutes);
 
 // --- /api/health route for admin panel ---
 app.get("/api/health", (_req, res) => {
