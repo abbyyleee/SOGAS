@@ -20,7 +20,7 @@ router.post("/register", async (req, res) => {
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
         // Insert user into DB
-        const [user] = awaitsql `
+        const [user] = await sql `
             INSERT INTO users (email, password_hash, role)
             VALUES (${email}, ${passwordHash}, 'admin')
             RETURNING id, email, role, created_at`;
