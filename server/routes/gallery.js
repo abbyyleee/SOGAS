@@ -1,5 +1,6 @@
 import express from "express";
 import sql from "../db/database.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 // UPLOAD new image
-router.post("/upload", async (req, res) => {
+router.post("/upload", authMiddleware, async (req, res) => {
   try {
     const { url, caption, public_id } = req.body;
 
@@ -33,7 +34,7 @@ router.post("/upload", async (req, res) => {
 });
 
 // UPDATE caption
-router.put("/:public_id", async (req, res) => {
+router.put("/:public_id", authMiddleware, async (req, res) => {
   try {
     const { caption } = req.body;
     const { public_id } = req.params;
@@ -53,7 +54,7 @@ router.put("/:public_id", async (req, res) => {
 });
 
 // DELETE image
-router.delete("/:public_id", async (req, res) => {
+router.delete("/:public_id", authMiddleware, async (req, res) => {
   try {
     const { public_id } = req.params;
 

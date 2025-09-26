@@ -14,6 +14,9 @@ import infoRoutes from "../routes/info.js";
 import siteVisitsRoutes from "../routes/site_visits.js";
 import authRoutes from "../routes/auth.js";
 
+// Middleware
+import authMiddleware from "../middleware/authMiddleware.js";
+
 dotenv.config();
 
 const app = express();
@@ -52,19 +55,8 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/info", infoRoutes);
 app.use("/api/site_visits", siteVisitsRoutes);
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authMiddleware, authRoutes);
 
-// --- /api/health route for admin panel ---
-app.get("/api/health", (_req, res) => {
-  const now = new Date();
-  res.json({
-    api: "ok",
-    db: "ok",
-    storage: "ok",
-    version: "1.0.0",
-    checkedAt: now.toISOString()
-  });
-});
 
 // --- Contact endpoint ---
 const contactSchema = z.object({

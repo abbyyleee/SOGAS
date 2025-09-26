@@ -1,7 +1,7 @@
 // info.js
-
 import express from "express";
 import sql from "../db/database.js";
+import authMiddleware from "../middleware/authMiddleware.js";  
 
 const router = express.Router();
 
@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 });
 
 // PUT /api/info
-router.put('/', async (req, res) => {
+router.put('/', authMiddleware, async (req, res) => {
     const {
         tagline,
         mission_title,

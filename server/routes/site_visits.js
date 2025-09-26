@@ -2,6 +2,7 @@
 
 import express from "express";
 import sql from "../db/database.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ let lastLogged = null;
  * POST /api/site_visits
  * Logs new site visits
  */
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
     try {
         const ip = req.ip || null;
         const user = req.headers["user_agent"] || null;

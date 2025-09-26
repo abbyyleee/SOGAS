@@ -4,7 +4,43 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import sql from "../db/database.js";
 
+
 const router = express.Router();
+
+// Login
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+
+        // Find User By Email
+        const result = await sql`SELECT * FROM users WHERE email = ${email}`;
+        const user = result[0];
+
+        if (!user) {
+            return res.status(401).json({ ok: false, error: "Invalid credentials" });
+        }
+
+        // Compare Password
+        const isMatch = await bcrypt.compare(password, user.password_hash);
+        if (!isMatch) {
+            return status(401).json({ ok: false, error: "Invalid credentials" });
+        }
+
+        // Token
+        const token = jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        res.json({ ok: true, token });
+
+    } catch (err) {
+        console.error("Login error:", err);
+        res.status(500).json({ ok: false, error: "Server error" });
+    }
+});
 
 // Register 
 router.post("/register", async (req, res) => {
