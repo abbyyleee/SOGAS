@@ -3,9 +3,39 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import sql from "../db/database.js";
+import { sendInviteEmail } from "../src/utils/mailer.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 
 const router = express.Router();
+
+// Invite - Admin Only
+router.post("/invite", authMiddleware, async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ ok: false, error: "Email is required" });
+        }
+
+        // Create Token
+        const token = jwt.sign({ email, role: "pending" }, process.env.JWT_SECRET, {
+            expiresIn: "48h"
+        });
+
+        // Frontend Registration Link
+        const inviteLink = `https://sogas-frontend.onrender.com/admin/register?token=${token}`;
+
+        // Send Email
+        await sendInviteEmail({ to: email, link: inviteLink });
+
+        res.json({ ok: true, message: "Invite sent successfully" });
+
+    } catch (err) {
+        console.error("Invite error:", err);
+        res.status(500).json({ ok: false, error: "Server error" });
+    }
+});
 
 // Login
 router.post("/login", async (req, res) => {
@@ -24,7 +54,7 @@ router.post("/login", async (req, res) => {
         // Compare Password
         const isMatch = await bcrypt.compare(password, user.password_hash);
         if (!isMatch) {
-            return status(401).json({ ok: false, error: "Invalid credentials" });
+            return res.status(401).json({ ok: false, error: "Invalid credentials" });
         }
 
         // Token

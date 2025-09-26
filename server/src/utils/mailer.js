@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import Mail from 'nodemailer/lib/mailer';
 
 export function buildTransporter() {
   return nodemailer.createTransport({
@@ -43,6 +44,27 @@ ${message}
   };
 
   return transporter.sendMail(mailOptions);
+}
+
+export async function sendInviteEmail({ to, link }) {
+  const transpoter = buildTransporter();
+
+  const mailOptions = {
+    from: process.env.CONTACT_FROM,
+    to,
+    subject: "You're invited to join Southern Gas Services Admin Dashboard",
+    text: `Click the link to set up your account: ${link}`,
+    html: `
+          <div style="font-family: sans-serif; line-height: 1.5;">
+            <h2>Southern Gas Services Admin Invitation</h2>
+            <p>You've been invited to join the admin dashboard.</p>
+            <p><a href="${link}" style="color:#005b96;font-weight:bold;">Click here to accept your invite</a></p>
+            <p>This link will expire in 48 hours.</p>
+          </div>
+          `
+  };
+
+  return transpoter.sendMail(mailOptions);
 }
 
 function escapeHtml(str = '') {
