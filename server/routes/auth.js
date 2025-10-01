@@ -150,38 +150,4 @@ router.post("/register", async (req, res) => {
     }
 });
 
-// Login
-router.post("/login", async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        // Find User
-        const users = await sql`SELECT * FROM users WHERE email = ${email}`;
-        if (users.length === 0) {
-            return res.status(400).json({ ok: false, error: "User not found" });
-        }
-
-        const user = users[0];
-
-        // Compare Password
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            return res.status(400).json({ ok: false, error: "Invalid password" });
-        }
-
-        // Sign JWT
-        const token = jwt.sign(
-            { id: user.id, email: user.email, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        );
-
-        res.json({ ok: true, token });
-
-    } catch (error) {
-        console.error("Login error:", error);
-        res.status(500).json({ ok: false, error: "Sever error" });
-    }
-});
-
 export default router;
