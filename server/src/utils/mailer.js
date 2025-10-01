@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import Mail from 'nodemailer/lib/mailer';
+
 
 export function buildTransporter() {
   return nodemailer.createTransport({
