@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
+import InviteAdmin from "./InviteAdmin";
 
 const OWNER_NAME = "Abby Lee";
 const OWNER_EMAIL = "abbychrislee@gmail.com";
@@ -384,6 +385,11 @@ useEffect(() => {
             </motion.div>
 
           </div>
+        </section>
+
+        {/* Invite New Admin */}
+        <section>
+          <InviteAdmin />
         </section>
 
         {/* Reports / Stats */}

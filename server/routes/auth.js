@@ -37,6 +37,57 @@ router.post("/invite", authMiddleware, async (req, res) => {
     }
 });
 
+// Accept Invite
+router.post("/accept-invite", async (req, res) => {
+    try {
+        const { token, password } = req.body;
+
+        if (!token || !password) {
+            return res.status(400).json({ error: "Token and password are required." });
+        }
+
+        // Verify Token
+        let payload;
+        try {
+            payload = jwt.verify(token, process.env.JWT_SECRET);
+
+        } catch (err) {
+            return res.status(400).json({ error: "invalid or expired invite token." });
+        }
+
+        const { email } = payload;
+
+        // Check if user exists
+        const existing = await sql.query("SELECT * FROM users WHERE email = $1", [email]);
+        if (existing.rows.length > 0 && existing.rows[0].password) {
+            return res.status(400).json({ error: "User already registered." });
+        }
+
+        // Hash Password
+        const hashed = await bcrypt.hash(password, 10);
+
+        // If user exist, update password; otherwise insert new
+        if (existing.rows.length > 0) {
+            await sql.query(
+                "UPDATE users SET password = $1, role = 'admin' WHERE email = $2",
+                [hashed, email]
+            );
+
+        } else {
+            await sql.query(
+                "INSERT INTO users (email, password, role) VALUES ($1, $2, 'admin')",
+                [email, hashed]
+            );
+        }
+
+        res.json({ ok: true, message: "Account created successfully!" });
+
+    } catch (err) {
+        console,error(err);
+        res.status(500).json({ error: "Server error." });
+    }
+});
+
 // Login
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;

@@ -15,6 +15,7 @@ import ManageGallery from "./components/admin/ManageGallery.jsx";
 import ManageInfo from "./components/admin/ManageInfo.jsx";
 import AdminLogin from "./components/admin/AdminLogin.jsx";
 import ProtectedRoute from "./components/admin/ProtectedRoute.jsx";
+import AdminRegister from "./components/admin/AdminRegister.jsx";
 
 
 //App Page
@@ -38,6 +39,7 @@ export default function App() {
             <Route path="/admin/gallery" element={<ManageGallery />} />
             <Route path="/admin/info" element={<ManageInfo />} />
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/register" element={<AdminRegister />} />
           </Routes>
         </main>
 
