@@ -55,7 +55,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/info", infoRoutes);
 app.use("/api/site_visits", siteVisitsRoutes);
-app.use("/api/auth", authMiddleware, authRoutes);
+app.use("/api/auth", authRoutes);
 
 
 // --- Contact endpoint ---
