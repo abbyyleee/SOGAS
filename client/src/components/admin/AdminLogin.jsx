@@ -38,8 +38,8 @@ export default function AdminLogin({ onLogin }) {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-dark-navy">
-            <div className="w-full max-w-md bg-deep-blue p-8 rounded-2xl shadow-lg border border-soft-blue">
+        <div className="min-h-screen flex items-center justify-center bg-deep-blue">
+            <div className="w-full max-w-md bg-light-blue p-8 rounded-2xl shadow-lg border border-soft-blue">
                 <h1 className="text-3xl font-bold text-white mb-6 text-center">
                     Admin Login
                 </h1>
@@ -52,7 +52,7 @@ export default function AdminLogin({ onLogin }) {
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                        <label className="block text-light0blue text-sm font-semibold mb-2">
+                        <label className="block text-dark-navy text-sm font-semibold mb-2">
                             Email
                         </label>
 
@@ -67,7 +67,7 @@ export default function AdminLogin({ onLogin }) {
                     </div>
 
                     <div>
-                        <label className="block text-light-blue text-sm font-semibold mb-2">
+                        <label className="block text-dark-navy text-sm font-semibold mb-2">
                             Password
                         </label>
 
@@ -83,7 +83,7 @@ export default function AdminLogin({ onLogin }) {
 
                     <button 
                         type="submit"
-                        className="w-full bg-soft-blue hover:bg-rust text-dark-navy font-bold py-3 rounded-lg transition"
+                        className="w-full bg-rust hover:soft-blue text-dark-navy font-bold py-3 rounded-lg transition"
                     >
                         Login
                     </button>
