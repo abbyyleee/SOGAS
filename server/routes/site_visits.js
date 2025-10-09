@@ -13,7 +13,7 @@ let lastLogged = null;
  * POST /api/site_visits
  * Logs new site visits
  */
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const ip = req.ip || null;
         const user = req.headers["user_agent"] || null;
