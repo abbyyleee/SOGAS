@@ -22,6 +22,7 @@ const sql = postgres({
   password: decodeURIComponent(url.password),
   database: url.pathname.slice(1),
   ssl: "require",
+  prepare: false,
 });
 
 // Export
