@@ -29,7 +29,7 @@ export default function AdminLogin({ onLogin }) {
             localStorage.setItem("token", data.token);
 
             // Redirect to Dashboard
-            window.location.href = "/admin";
+            window.location.href = "/admin?key=SoGas97";
 
         } catch (err) {
             console.error("Login error:", err);

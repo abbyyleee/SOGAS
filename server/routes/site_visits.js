@@ -2,7 +2,7 @@
 
 import express from "express";
 import sql from "../db/database.js";
-import authMiddleware from "../middleware/authMiddleware.js";
+
 
 const router = express.Router();
 
