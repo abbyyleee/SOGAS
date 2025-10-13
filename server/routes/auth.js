@@ -18,6 +18,18 @@ router.post("/invite", authMiddleware, async (req, res) => {
             return res.status(400).json({ ok: false, error: "Email is required" });
         }
 
+        // Check Invite Permission
+        const requestedId = req.user?.id;
+        const rows = await sql`
+            SELECT can_invite
+            FROM users
+            WHERE id = ${requestedId}
+            LIMIT 1;`
+        ;
+        if (!rows?.[0]?.can_invite) {
+            return res.status(403).json({ ok: false, error: "Permission not granted" });
+        }
+
         // Create Token
         const token = jwt.sign({ email, role: "pending" }, process.env.JWT_SECRET, {
             expiresIn: "48h"
@@ -33,6 +45,25 @@ router.post("/invite", authMiddleware, async (req, res) => {
 
     } catch (err) {
         console.error("Invite error:", err);
+        res.status(500).json({ ok: false, error: "Server error" });
+    }
+});
+
+// Hide Invite for Unauthorized Users
+router.get("/profile", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const rows = await sql`
+            SELECT id, email, name, role, can_invite
+            FROM users
+            WHERE id = ${userId}
+            LIMIT 1`
+        ;
+        if (!rows[0]) return res.status(404).json({ ok: false, error: "User not found" });
+        res.json({ ok: true, user: rows[0] });
+
+    } catch (err) {
+        console.error("error: ", err);
         res.status(500).json({ ok: false, error: "Server error" });
     }
 });
