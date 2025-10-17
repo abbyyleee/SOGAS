@@ -47,10 +47,10 @@ ${message}
 }
 
 export async function sendInviteEmail({ to, link }) {
-  const transpoter = buildTransporter();
+  const transporter = buildTransporter();
 
   const mailOptions = {
-    from: process.env.CONTACT_FROM,
+    from: process.env.EMAIL_FROM || process.env.SMTP_USER,
     to,
     subject: "You're invited to join Southern Gas Services Admin Dashboard",
     text: `Click the link to set up your account: ${link}`,
@@ -64,7 +64,7 @@ export async function sendInviteEmail({ to, link }) {
           `
   };
 
-  return transpoter.sendMail(mailOptions);
+  return transporter.sendMail(mailOptions);
 }
 
 function escapeHtml(str = '') {
