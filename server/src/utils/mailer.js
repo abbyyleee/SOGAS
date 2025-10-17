@@ -1,23 +1,52 @@
 import nodemailer from 'nodemailer';
 
+function resolveSecureAndPort() {
+  const port = Number(process.env.SMTP_PORT) || 587;
+  
+  const explicitSecure = typeof process.env.SMTP_SECURE === 'string'
+    ? process.env.SMTP_SECURE.toLowerCase() === 'true'
+    : undefined;
+
+  const secure = explicitSecure !== undefined ? explicitSecure : (port === 465);
+  return { port, secure };
+}
 
 export function buildTransporter() {
+  const { port, secure } = resolveSecureAndPort();
+
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for 587
+    host: process.env.SMTP_HOST,             
+    port,                                    
+    secure,                                  
     auth: {
-      user: process.env.SMTP_USER,
+      user: process.env.SMTP_USER,           
       pass: process.env.SMTP_PASS
-    }
+    },
+    
+    requireTLS: !secure,
+  
+    connectionTimeout: 15000,               
+    greetingTimeout: 10000,                  
+    socketTimeout: 20000,                    
   });
+}
+
+/**
+ * Optional helper: quickly verify TCP/TLS/auth from runtime.
+ * Usage (anywhere server-side):
+ *   import { verifySmtp } from './utils/mailer.js';
+ *   await verifySmtp();
+ */
+export async function verifySmtp() {
+  const transporter = buildTransporter();
+  return transporter.verify();
 }
 
 export async function sendContactEmail({ name, email, subject, message }) {
   const transporter = buildTransporter();
 
   const mailOptions = {
-    from: process.env.CONTACT_FROM,
+    from: process.env.CONTACT_FROM || process.env.SMTP_USER,
     to: process.env.CONTACT_TO,
     subject: subject ? `[Website] ${subject}` : '[Website] New Contact Form Message',
     replyTo: email,
@@ -50,18 +79,19 @@ export async function sendInviteEmail({ to, link }) {
   const transporter = buildTransporter();
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.SMTP_USER,
+    
+    from: process.env.EMAIL_FROM || process.env.CONTACT_FROM || process.env.SMTP_USER,
     to,
     subject: "You're invited to join Southern Gas Services Admin Dashboard",
     text: `Click the link to set up your account: ${link}`,
     html: `
-          <div style="font-family: sans-serif; line-height: 1.5;">
-            <h2>Southern Gas Services Admin Invitation</h2>
-            <p>You've been invited to join the admin dashboard.</p>
-            <p><a href="${link}" style="color:#005b96;font-weight:bold;">Click here to accept your invite</a></p>
-            <p>This link will expire in 48 hours.</p>
-          </div>
-          `
+      <div style="font-family: sans-serif; line-height: 1.5;">
+        <h2>Southern Gas Services Admin Invitation</h2>
+        <p>You've been invited to join the admin dashboard.</p>
+        <p><a href="${link}" style="font-weight:bold;">Click here to accept your invite</a></p>
+        <p>This link will expire in 48 hours.</p>
+      </div>
+    `
   };
 
   return transporter.sendMail(mailOptions);
