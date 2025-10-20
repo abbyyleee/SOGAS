@@ -3,7 +3,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import sql from "../db/database.js";
-import { sendInviteEmail } from "../utils/mailer.js";
+import { sendInviteEmail } from "../src/utils/mailer.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
