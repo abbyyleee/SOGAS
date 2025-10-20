@@ -1,45 +1,27 @@
 import nodemailer from 'nodemailer';
 
-function resolveSecureAndPort() {
-  const port = Number(process.env.SMTP_PORT) || 587;
-  
-  const explicitSecure = typeof process.env.SMTP_SECURE === 'string'
-    ? process.env.SMTP_SECURE.toLowerCase() === 'true'
-    : undefined;
-
-  const secure = explicitSecure !== undefined ? explicitSecure : (port === 465);
-  return { port, secure };
-}
-
 export function buildTransporter() {
-  const { port, secure } = resolveSecureAndPort();
+  const port = Number(process.env.SMTP_PORT) || 587;
+  const secure = (process.env.SMTP_SECURE === 'true') || port === 465;
 
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,             
-    port,                                    
-    secure,                                  
+    host: process.env.SMTP_HOST,
+    port,
+    secure,
     auth: {
-      user: process.env.SMTP_USER,           
+      user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
     },
-    
     requireTLS: !secure,
-  
-    connectionTimeout: 15000,               
-    greetingTimeout: 10000,                  
-    socketTimeout: 20000,                    
+    family: 4,
+    tls: {
+      servername: process.env.SMTP_HOST,
+      rejectUnauthorized: true
+    },
+    connectionTimeout: 15000,
+    greetingTimeout: 10000,
+    socketTimeout: 20000
   });
-}
-
-/**
- * Optional helper: quickly verify TCP/TLS/auth from runtime.
- * Usage (anywhere server-side):
- *   import { verifySmtp } from './utils/mailer.js';
- *   await verifySmtp();
- */
-export async function verifySmtp() {
-  const transporter = buildTransporter();
-  return transporter.verify();
 }
 
 export async function sendContactEmail({ name, email, subject, message }) {
@@ -47,7 +29,7 @@ export async function sendContactEmail({ name, email, subject, message }) {
 
   const mailOptions = {
     from: process.env.CONTACT_FROM || process.env.SMTP_USER,
-    to: process.env.CONTACT_TO,
+    to: process.env.CONTACT_TO || process.env.EMAIL_TO || process.env.SMTP_USER,
     subject: subject ? `[Website] ${subject}` : '[Website] New Contact Form Message',
     replyTo: email,
     text: `
@@ -79,7 +61,6 @@ export async function sendInviteEmail({ to, link }) {
   const transporter = buildTransporter();
 
   const mailOptions = {
-    
     from: process.env.EMAIL_FROM || process.env.CONTACT_FROM || process.env.SMTP_USER,
     to,
     subject: "You're invited to join Southern Gas Services Admin Dashboard",
