@@ -1,23 +1,18 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 export function buildTransporter() {
-  const port = Number(process.env.SMTP_PORT) || 587;
-  const secure = (process.env.SMTP_SECURE === 'true') || port === 465;
-
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port,
-    secure,
+    host: process.env.SMTP_HOST,          
+    port: 465,                            
+    secure: true,                         
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
     },
-    requireTLS: !secure,
-    family: 4,
     tls: {
-      servername: process.env.SMTP_HOST,
-      rejectUnauthorized: true
+      rejectUnauthorized: true            
     },
+    family: 4,                            
     connectionTimeout: 15000,
     greetingTimeout: 10000,
     socketTimeout: 20000
@@ -30,14 +25,14 @@ export async function sendContactEmail({ name, email, subject, message }) {
   const mailOptions = {
     from: process.env.CONTACT_FROM || process.env.SMTP_USER,
     to: process.env.CONTACT_TO || process.env.EMAIL_TO || process.env.SMTP_USER,
-    subject: subject ? `[Website] ${subject}` : '[Website] New Contact Form Message',
+    subject: subject ? `[Website] ${subject}` : "[Website] New Contact Form Message",
     replyTo: email,
     text: `
 New message from your website:
 
 Name: ${name}
 Email: ${email}
-Subject: ${subject || '(none)'}
+Subject: ${subject || "(none)"}
 
 Message:
 ${message}
@@ -47,7 +42,7 @@ ${message}
         <h2>New message from your website</h2>
         <p><strong>Name:</strong> ${escapeHtml(name)}</p>
         <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-        <p><strong>Subject:</strong> ${escapeHtml(subject || '(none)')}</p>
+        <p><strong>Subject:</strong> ${escapeHtml(subject || "(none)")}</p>
         <hr/>
         <p>${escapeHtml(message)}</p>
       </div>
@@ -78,11 +73,11 @@ export async function sendInviteEmail({ to, link }) {
   return transporter.sendMail(mailOptions);
 }
 
-function escapeHtml(str = '') {
+function escapeHtml(str = "") {
   return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
