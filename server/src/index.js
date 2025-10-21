@@ -1,9 +1,10 @@
+import "dotenv/config";
+
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import nodemailer from "nodemailer";
 import { z } from "zod";
-import dotenv from "dotenv";
 import sql from "../db/database.js";
 
 // Routes
@@ -16,8 +17,6 @@ import authRoutes from "../routes/auth.js";
 
 // Middleware
 import authMiddleware from "../middleware/authMiddleware.js";
-
-dotenv.config();
 
 const app = express();
 
