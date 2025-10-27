@@ -1,84 +1,95 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-export function buildTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: 587,                    // STARTTLS port
-    secure: false,                // STARTTLS begins as plaintext
-    requireTLS: true,             // upgrade to TLS
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-    tls: {
-      rejectUnauthorized: true,
-    },
-    family: 4,
-    connectionTimeout: 15000,
-    greetingTimeout: 10000,
-    socketTimeout: 20000,
-  });
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendContactEmail({ name, email, subject, message }) {
-  const transporter = buildTransporter();
-
-  const mailOptions = {
-    from: process.env.CONTACT_FROM || process.env.SMTP_USER,
-    to: process.env.CONTACT_TO || process.env.EMAIL_TO || process.env.SMTP_USER,
-    subject: subject ? `[Website] ${subject}` : "[Website] New Contact Form Message",
-    replyTo: email,
-    text: `
-New message from your website:
-
-Name: ${name}
-Email: ${email}
-Subject: ${subject || "(none)"}
-
-Message:
-${message}
-    `,
-    html: `
-      <div style="font-family:sans-serif;line-height:1.5;">
-        <h2>New message from your website</h2>
-        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-        <p><strong>Subject:</strong> ${escapeHtml(subject || "(none)")}</p>
-        <hr/>
-        <p>${escapeHtml(message)}</p>
-      </div>
-    `,
-  };
-
-  return transporter.sendMail(mailOptions);
-}
-
-export async function sendInviteEmail({ to, link }) {
-  const transporter = buildTransporter();
-
-  const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.CONTACT_FROM || process.env.SMTP_USER,
-    to,
-    subject: "You're invited to join Southern Gas Services Admin Dashboard",
-    text: `Click the link to set up your account: ${link}`,
-    html: `
-      <div style="font-family:sans-serif;line-height:1.5;">
-        <h2>Southern Gas Services Admin Invitation</h2>
-        <p>You've been invited to join the admin dashboard.</p>
-        <p><a href="${link}" style="font-weight:bold;">Click here to accept your invite</a></p>
-        <p>This link will expire in 48 hours.</p>
-      </div>
-    `,
-  };
-
-  return transporter.sendMail(mailOptions);
-}
-
-function escapeHtml(str = "") {
+function safeHtml(str = "") {
   return String(str)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+async function sendWithFallback({ from, to, subject, html, text, replyTo }) {
+  // Try your desired FROM (requires domain verification in Resend)
+  try {
+    const r = await resend.emails.send({
+      from,
+      to,
+      subject,
+      html,
+      text,
+      reply_to: replyTo,
+    });
+    return r;
+  } catch (e) {
+    // If domain not verified (403), retry via onboarding sender
+    if (e?.status === 403 || /unauthorized/i.test(String(e?.message))) {
+      return resend.emails.send({
+        from: "Southern Gas Services <onboarding@resend.dev>",
+        to,
+        subject,
+        html,
+        text,
+        reply_to: replyTo || from,
+      });
+    }
+    throw e;
+  }
+}
+
+export async function sendContactEmail({ name, email, subject, message }) {
+  const from = process.env.EMAIL_FROM || "Southern Gas Services <onboarding@resend.dev>";
+  const to = process.env.CONTACT_TO || process.env.EMAIL_TO || process.env.SMTP_USER;
+
+  const text =
+`New contact form submission from Southern Gas Services website
+
+Name: ${name}
+Email: ${email}
+Subject: ${subject || "(none)"}
+
+Message:
+${message}`;
+
+  const html = `
+    <div style="font-family:sans-serif;line-height:1.5;">
+      <h2>New contact form submission</h2>
+      <p><strong>Name:</strong> ${safeHtml(name)}</p>
+      <p><strong>Email:</strong> ${safeHtml(email)}</p>
+      <p><strong>Subject:</strong> ${safeHtml(subject || "(none)")}</p>
+      <hr/>
+      <div style="white-space:pre-wrap">${safeHtml(message)}</div>
+    </div>
+  `;
+
+  return sendWithFallback({
+    from,
+    to,
+    subject: subject ? `[Website] ${subject}` : "[Website] New Contact Form Message",
+    html,
+    text,
+    replyTo: email,
+  });
+}
+
+export async function sendInviteEmail({ to, link }) {
+  const from = process.env.EMAIL_FROM || "Southern Gas Services <onboarding@resend.dev>";
+  const subject = "You're invited to join Southern Gas Services Admin Dashboard";
+  const text = `You're invited to the Southern Gas Services Admin Dashboard.
+
+Accept your invite: ${link}
+
+This link will expire in 48 hours.`;
+  const html = `
+    <div style="font-family:sans-serif;line-height:1.5;">
+      <h2>Southern Gas Services Admin Invitation</h2>
+      <p>You've been invited to join the admin dashboard.</p>
+      <p><a href="${link}" style="font-weight:bold;">Click here to accept your invite</a></p>
+      <p>This link will expire in 48 hours.</p>
+    </div>
+  `;
+
+  return sendWithFallback({ from, to, subject, html, text });
 }

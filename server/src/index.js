@@ -1,11 +1,10 @@
 import "dotenv/config";
-
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import nodemailer from "nodemailer";
 import { z } from "zod";
 import sql from "../db/database.js";
+import { Resend } from "resend";
 
 // Routes
 import adminRoutes from "../routes/admin.js";
@@ -15,9 +14,7 @@ import infoRoutes from "../routes/info.js";
 import siteVisitsRoutes from "../routes/site_visits.js";
 import authRoutes from "../routes/auth.js";
 
-// Middleware
-import authMiddleware from "../middleware/authMiddleware.js";
-
+const resend = new Resend(process.env.RESEND_API_KEY);
 const app = express();
 
 // --- Config from .env ---
@@ -75,16 +72,6 @@ function formatPhone(raw) {
   return `(${ten.slice(0, 3)})-${ten.slice(3, 6)}-${ten.slice(6)}`;
 }
 
-const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: SMTP_PORT,
-  secure: SMTP_PORT === 465,
-  auth: {
-    user: SMTP_USER,
-    pass: SMTP_PASS,
-  },
-});
-
 app.post("/api/contact", async (req, res) => {
   try {
     const data = contactSchema.parse(req.body);
@@ -103,41 +90,20 @@ app.post("/api/contact", async (req, res) => {
       data.message,
     ].filter(Boolean);
 
-    const html =
-      `
+    const html = `
       <div style="font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:#0b2545;">
         <div style="max-width:640px;margin:24px auto;padding:20px 24px;border:1px solid #e5e7eb;border-radius:12px;background:#ffffff;">
           <h2 style="margin:0 0 8px 0;font-size:20px;">New contact form submission</h2>
           <p style="margin:0 0 16px 0;font-size:14px;color:#334155;">Southern Gas Services website</p>
-
           <table role="presentation" width="100%" style="border-collapse:collapse;margin:0 0 16px 0;">
             <tbody>
-              <tr>
-                <td style="padding:8px 0;font-weight:600;width:120px;">Name</td>
-                <td style="padding:8px 0;">${escapeHtml(data.name)}</td>
-              </tr>
-              <tr>
-                <td style="padding:8px 0;font-weight:600;">Email</td>
-                <td style="padding:8px 0;">${escapeHtml(data.email)}</td>
-              </tr>
-              ${data.company ? `
-              <tr>
-                <td style="padding:8px 0;font-weight:600;">Company</td>
-                <td style="padding:8px 0;">${escapeHtml(data.company)}</td>
-              </tr>` : ``}
-              ${prettyPhone ? `
-              <tr>
-                <td style="padding:8px 0;font-weight:600;">Phone</td>
-                <td style="padding:8px 0;">${escapeHtml(prettyPhone)}</td>
-              </tr>` : ``}
-              ${data.subject ? `
-              <tr>
-                <td style="padding:8px 0;font-weight:600;">Subject</td>
-                <td style="padding:8px 0;">${escapeHtml(data.subject)}</td>
-              </tr>` : ``}
+              <tr><td style="padding:8px 0;font-weight:600;width:120px;">Name</td><td style="padding:8px 0;">${escapeHtml(data.name)}</td></tr>
+              <tr><td style="padding:8px 0;font-weight:600;">Email</td><td style="padding:8px 0;">${escapeHtml(data.email)}</td></tr>
+              ${data.company ? `<tr><td style="padding:8px 0;font-weight:600;">Company</td><td style="padding:8px 0;">${escapeHtml(data.company)}</td></tr>` : ``}
+              ${prettyPhone ? `<tr><td style="padding:8px 0;font-weight:600;">Phone</td><td style="padding:8px 0;">${escapeHtml(prettyPhone)}</td></tr>` : ``}
+              ${data.subject ? `<tr><td style="padding:8px 0;font-weight:600;">Subject</td><td style="padding:8px 0;">${escapeHtml(data.subject)}</td></tr>` : ``}
             </tbody>
           </table>
-
           <div style="padding:12px 14px;border:1px solid #e5e7eb;border-radius:8px;background:#f8fafc;">
             <div style="font-weight:600;margin-bottom:8px;">Message</div>
             <div style="white-space:pre-wrap;line-height:1.5;">${escapeHtml(data.message)}</div>
@@ -146,20 +112,21 @@ app.post("/api/contact", async (req, res) => {
       </div>
     `.trim();
 
-    const info = await transporter.sendMail({
-      from: EMAIL_FROM,
-      to: EMAIL_TO,
-      replyTo: data.email,
+    // Send via Resend (HTTPS)
+    const resp = await resend.emails.send({
+      from: process.env.EMAIL_FROM || "Southern Gas Services <onboarding@resend.dev>",
+      to: process.env.CONTACT_TO || process.env.EMAIL_TO || process.env.SMTP_USER,
+      reply_to: data.email,
       subject: data.subject || `New message from ${data.name}`,
       text: textLines.join("\n"),
-      html,
-      envelope: {
-        from: SMTP_USER,
-        to: EMAIL_TO,
-      },
+      html
     });
 
-    //Log inquiries for stats
+    if (resp.error) {
+      throw new Error(resp.error.message || "Resend email error");
+    }
+
+    // Log inquiries for stats
     await sql`
       INSERT INTO inquiries (name, email, subject, message)
       VALUES (${data.name}, ${data.email}, ${data.subject || ""}, ${data.message})
@@ -168,7 +135,7 @@ app.post("/api/contact", async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Your message has been sent.",
-      id: info.messageId,
+      id: resp.data?.id || null
     });
   } catch (err) {
     if (err instanceof z.ZodError) {
@@ -180,11 +147,13 @@ app.post("/api/contact", async (req, res) => {
       return res.status(400).json({ success: false, errors });
     }
     console.error("[/api/contact] Error:", err);
-    return res
-      .status(500)
-      .json({ success: false, message: "Unable to send your message right now. Please try again later." });
+    return res.status(500).json({
+      success: false,
+      message: "Unable to send your message right now. Please try again later."
+    });
   }
 });
+
 
 // --- 404 Handler ---
 app.use((_req, res) => {
