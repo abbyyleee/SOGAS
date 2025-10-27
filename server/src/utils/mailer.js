@@ -1,36 +1,32 @@
 import nodemailer from "nodemailer";
 
-// --- Create Transporter ---
 export function buildTransporter() {
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,         
-    port: Number(process.env.SMTP_PORT) || 465,
-    secure: true,                        
+    host: process.env.SMTP_HOST,
+    port: 587,                    // STARTTLS port
+    secure: false,                // STARTTLS begins as plaintext
+    requireTLS: true,             // upgrade to TLS
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
     tls: {
-      rejectUnauthorized: true,          
-      servername: process.env.SMTP_HOST,
+      rejectUnauthorized: true,
     },
-    connectionTimeout: 15000,             
-    greetingTimeout: 10000,               
-    socketTimeout: 20000,                 
-    family: 4,                            
+    family: 4,
+    connectionTimeout: 15000,
+    greetingTimeout: 10000,
+    socketTimeout: 20000,
   });
 }
 
-// --- Contact Form Email ---
 export async function sendContactEmail({ name, email, subject, message }) {
   const transporter = buildTransporter();
 
   const mailOptions = {
     from: process.env.CONTACT_FROM || process.env.SMTP_USER,
     to: process.env.CONTACT_TO || process.env.EMAIL_TO || process.env.SMTP_USER,
-    subject: subject
-      ? `[Website] ${subject}`
-      : "[Website] New Contact Form Message",
+    subject: subject ? `[Website] ${subject}` : "[Website] New Contact Form Message",
     replyTo: email,
     text: `
 New message from your website:
@@ -57,15 +53,11 @@ ${message}
   return transporter.sendMail(mailOptions);
 }
 
-// --- Admin Invite Email ---
 export async function sendInviteEmail({ to, link }) {
   const transporter = buildTransporter();
 
   const mailOptions = {
-    from:
-      process.env.EMAIL_FROM ||
-      process.env.CONTACT_FROM ||
-      process.env.SMTP_USER,
+    from: process.env.EMAIL_FROM || process.env.CONTACT_FROM || process.env.SMTP_USER,
     to,
     subject: "You're invited to join Southern Gas Services Admin Dashboard",
     text: `Click the link to set up your account: ${link}`,
@@ -73,7 +65,7 @@ export async function sendInviteEmail({ to, link }) {
       <div style="font-family:sans-serif;line-height:1.5;">
         <h2>Southern Gas Services Admin Invitation</h2>
         <p>You've been invited to join the admin dashboard.</p>
-        <p><a href="${link}" style="color:#005b96;font-weight:bold;">Click here to accept your invite</a></p>
+        <p><a href="${link}" style="font-weight:bold;">Click here to accept your invite</a></p>
         <p>This link will expire in 48 hours.</p>
       </div>
     `,
@@ -82,7 +74,6 @@ export async function sendInviteEmail({ to, link }) {
   return transporter.sendMail(mailOptions);
 }
 
-// --- Helper for safe HTML output ---
 function escapeHtml(str = "") {
   return String(str)
     .replaceAll("&", "&amp;")
