@@ -389,6 +389,7 @@ useEffect(() => {
 
         {/* Invite New Admin */}
         <section>
+          <SectionHeader title="Add New Admin" subtitle="Invite a user to become an admin" />
           <InviteAdmin />
         </section>
 

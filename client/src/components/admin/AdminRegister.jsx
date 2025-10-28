@@ -52,9 +52,9 @@ export default function AdminRegister() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-dark-navy">
-            <div className="w-full max-w-md bg-deep-blue p-8 rounded-2xl shadow-lg border border-soft-blue">
-                <h1 className="text-3xl font-bold text-white mb-2 text-center">Accept Invite</h1>
+        <div className="min-h-screen flex items-center justify-center bg-deep-blue">
+            <div className="w-full max-w-md bg-light-blue p-8 rounded-2xl shadow-lg border border-soft-blue">
+                <h1 className="text-3xl font-bold text-dark-navy mb-2 text-center">Accept Invite</h1>
                 <p className="text-light-blue text-sm text-center mb-6">
                     Set your password to activate your admin account.
                 </p>
