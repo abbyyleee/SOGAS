@@ -129,7 +129,7 @@ export default function Admin() {
     async function loadHealth() {
       try {
         setHealthError("");
-        const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/health`);
+        const res = await fetch(`${API_BASE}/api/health`);
         if (!res.ok) throw new Error(`${res.status}`);
         const data = await res.json();
         if (mounted) setHealth(data);
