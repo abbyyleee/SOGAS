@@ -54,7 +54,7 @@ export default function AdminRegister() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-deep-blue">
             <div className="w-full max-w-md bg-light-blue p-8 rounded-2xl shadow-lg border border-soft-blue">
-                <h1 className="text-3xl font-bold text-dark-navy mb-2 text-center">Accept Invite</h1>
+                <h1 className="text-3xl font-bold text-dark-navy mb-2 text-center">Admin Registration</h1>
                 <p className="text-light-blue text-sm text-center mb-6">
                     Set your password to activate your admin account.
                 </p>
@@ -73,8 +73,8 @@ export default function AdminRegister() {
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                        <label className="block text-light-blue text-sm font-semibold mb-2">
-                            New PAssword
+                        <label className="block text-dark-navy text-sm font-semibold mb-2">
+                            New Password
                         </label>
                         <input
                             type="password"
@@ -87,7 +87,7 @@ export default function AdminRegister() {
                     </div>
 
                     <div>
-                        <label className="block text-light-blue text-sm font-semibold mb-2">
+                        <label className="block text-dark-navy text-sm font-semibold mb-2">
                             Confirm Password
                         </label>
                         <input 
@@ -103,7 +103,7 @@ export default function AdminRegister() {
                     <button 
                         type="submit"
                         disabled={!token}
-                        className="w-full bg-soft-blue hover:bg-light-blue disabled:opacity-50 text-dark-navy font-bold py-3 rounded-lg transition"
+                        className="w-full bg-rust disabled:opacity-50 text-dark-navy font-bold py-3 rounded-lg transition"
                     >
                         Create Account
                     </button>

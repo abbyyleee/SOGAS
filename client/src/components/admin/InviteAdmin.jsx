@@ -44,7 +44,7 @@ export default function InviteAdmin() {
     }
 
     return (
-        <div className="bg-light-blue rounded-xl p-6 mb-8">
+        <div className="bg-light-blue rounded-xl p-12 mb-8">
 
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-4">
                 <input 
@@ -59,7 +59,7 @@ export default function InviteAdmin() {
                 <button 
                     type="submit"
                     disabled={loading}
-                    className="bg-soft-blue hover:bg-light-blue text-dark-navy font-semibold px-6 py-3 rounded-lg transition"
+                    className="bg-rust text-dark-navy font-semibold px-6 py-3 rounded-lg transition"
                 >
                     {loading ? "Sending..." : "Send Invite" }
                 </button>
