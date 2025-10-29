@@ -12,7 +12,7 @@ function safeHtml(str = "") {
 }
 
 async function sendWithFallback({ from, to, subject, html, text, replyTo }) {
-  // Try your desired FROM (requires domain verification in Resend)
+  // Try FROM
   try {
     const r = await resend.emails.send({
       from,

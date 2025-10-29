@@ -9,26 +9,26 @@ import About from './homepage/About';
 import Contact from './homepage/Contact';
 import { useEffect } from 'react';
 
+const API_BASE =
+    import.meta.env.VITE_API_BASE || "https://api.sogasservices.com";
 
-//Complete Home Page
+
 export default function Home() {
 
     // Track Site Visit
     useEffect(() => {
-    fetch("https://sogas-backend.onrender.com/api/site_visits", { method: "POST" });
+    fetch(`${API_BASE}/api/site_visits`, { method: "POST" });
     }, []);
 
     return (
         <>
-            
             <Hero />
             <Mission />
             <Pipe />
             <Services />
             <Crew />
             <About />
-            <Contact />
-               
+            <Contact />   
         </>
 
     );

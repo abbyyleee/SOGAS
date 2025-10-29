@@ -19,28 +19,26 @@ const app = express();
 
 // --- Config from .env ---
 const PORT = Number(process.env.PORT || 4000);
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
-
-const EMAIL_TO = process.env.EMAIL_TO; // REQUIRED
-const EMAIL_FROM = process.env.EMAIL_FROM || '"Website" <no-reply@example.com>';
-
-const SMTP_HOST = process.env.SMTP_HOST;
-const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
-const SMTP_USER = process.env.SMTP_USER;
-const SMTP_PASS = process.env.SMTP_PASS;
+const ALLOWED_ORIGINS = [
+  "https://localhost:5173",
+  "https://www.sogasservices.com",
+  "https://sogasservices.com",
+];
+const EMAIL_TO = process.env.EMAIL_TO; 
 
 // --- Guards ---
 if (!EMAIL_TO) console.warn("[WARN] EMAIL_TO is not set in .env");
-if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
-  console.warn("[WARN] SMTP credentials are missing. Email sending will fail.");
-}
 
 // --- Middleware ---
 app.use(helmet());
 app.use(cors({
-    origin: CORS_ORIGIN,
-    methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
-    credentials: false,
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true);
+      if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+      return cb(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
   })
 );
 app.use(express.json({ limit: "50kb" }));

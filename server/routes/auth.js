@@ -27,7 +27,7 @@ router.post("/invite", authMiddleware, async (req, res) => {
 
     const token = jwt.sign({ email, role: "pending" }, process.env.JWT_SECRET, { expiresIn: "48h" });
 
-    const inviteLink = `https://sogas-frontend.onrender.com/admin/register?token=${token}`;
+    const inviteLink = `https://www.sogasservices.com/admin/register?token=${token}`;
 
     await sendInviteEmail({ to: email, link: inviteLink });
 

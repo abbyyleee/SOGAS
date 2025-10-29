@@ -28,7 +28,7 @@ export default function Gallery() {
 
     (async () => {
       try {
-        const res = await fetch("https://sogas-backend.onrender.com/api/gallery");
+        const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/gallery`);
         const data = await res.json();
         if (!mounted) return;
         setImages(data);
