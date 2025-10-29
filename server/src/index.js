@@ -20,7 +20,8 @@ const app = express();
 // --- Config from .env ---
 const PORT = Number(process.env.PORT || 4000);
 const ALLOWED_ORIGINS = [
-  "https://localhost:5173",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
   "https://www.sogasservices.com",
   "https://sogasservices.com",
 ];
