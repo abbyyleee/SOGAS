@@ -5,7 +5,7 @@ import authMiddleware from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // GET all gallery images
-router.get("/", async (req, res) => {
+router.get("/", async (_req, res) => {
   try {
     const images = await sql`SELECT * FROM gallery ORDER BY created_at DESC`;
     res.json(images);
