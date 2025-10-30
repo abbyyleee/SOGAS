@@ -3,7 +3,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://sogas-backend.onrender.com/api",
+    baseURL: "https://api.sogasservices.com",
     timeout: 5000,
     headers: {
         "Content-Type": "application/json",
