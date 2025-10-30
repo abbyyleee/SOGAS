@@ -10,7 +10,7 @@ export default function AdminLogin({ onLogin }) {
         e.preventDefault();
         
         try {
-            const res = await fetch("https://sogas-backend.onrender.com/api/auth/login", {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

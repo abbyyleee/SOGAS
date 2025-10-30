@@ -28,7 +28,7 @@ export default function Gallery() {
 
     (async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/gallery`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE}/gallery`);
         const data = await res.json();
         if (!mounted) return;
         setImages(data);
@@ -37,7 +37,7 @@ export default function Gallery() {
         if (!mounted) return;
         setStatus({
           type: "error",
-          message: "Could not load gallery. Check /api/gallery.",
+          message: "Error loading gallery",
         });
       }
     })();

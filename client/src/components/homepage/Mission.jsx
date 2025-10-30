@@ -17,7 +17,7 @@ export default function Mission() {
   const [missionDescription, setMissionDescription] = useState("");
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE}/api/info`)
+    fetch(`${import.meta.env.VITE_API_BASE}/info`)
       .then((res) => res.json())
       .then((data) => {
         setMissionTitle(data.mission_title || "");

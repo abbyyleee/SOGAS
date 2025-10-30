@@ -129,7 +129,7 @@ export default function Admin() {
     async function loadHealth() {
       try {
         setHealthError("");
-        const res = await fetch(`${API_BASE}/api/health`);
+        const res = await fetch(`${API_BASE}/health`);
         if (!res.ok) throw new Error(`${res.status}`);
         const data = await res.json();
         if (mounted) setHealth(data);
@@ -174,7 +174,7 @@ export default function Admin() {
 useEffect(() => {
   async function fetchStats() {
     try {
-      const res = await fetch(`${API_BASE}/api/site_visits/stats`);
+      const res = await fetch(`${API_BASE}/site_visits/stats`);
       const data = await res.json();
       setStats(data);
 

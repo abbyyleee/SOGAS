@@ -30,7 +30,7 @@ export default function AdminRegister() {
             return setError("Passwords do not match.");
 
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/auth/accept-invite`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}/auth/accept-invite`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token, password }),
