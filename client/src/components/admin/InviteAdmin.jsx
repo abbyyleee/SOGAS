@@ -15,7 +15,7 @@ export default function InviteAdmin() {
 
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch(`${import.meta.env.VITE_API_BASE}/auth/invite`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}api/auth/invite`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

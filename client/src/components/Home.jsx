@@ -17,7 +17,7 @@ export default function Home() {
 
     // Track Site Visit
     useEffect(() => {
-    fetch(`${API_BASE}/site_visits`, { method: "POST" });
+    fetch(`${API_BASE}/api/site_visits`, { method: "POST" });
     }, []);
 
     return (
