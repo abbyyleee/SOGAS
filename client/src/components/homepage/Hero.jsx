@@ -8,7 +8,7 @@ export default function Hero() {
     useEffect(() => {
         async function fetchTagline() {
             try {
-                const res = await fetch(`${import.meta.env.VITE_API_BASE}/info`);
+                const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/info`);
                 const data = await res.json();
                 setTagline(data.tagline || "");
             } catch (error) {

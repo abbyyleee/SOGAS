@@ -35,7 +35,7 @@ export default function Contact() {
   const [siteInfo, setSiteInfo] = useState({ phone: "", address: "" });
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE}api/info`)
+    fetch(`${import.meta.env.VITE_API_BASE}/api/info`)
       .then((res) => res.json())
       .then((data) => {
         setSiteInfo({
