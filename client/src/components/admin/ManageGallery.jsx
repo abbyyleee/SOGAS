@@ -35,28 +35,37 @@ export default function ManageGallery() {
         formData.append("upload_preset", "sogas_gallery");
       
         try {
-          const cloudRes = await fetch(
-            "https://api.cloudinary.com/v1_1/dhgjjux80/image/upload",
-            {
-              method: "POST",
-              body: formData,
-            }
-          );
-          const data = await cloudRes.json();
+          // Upload to Cloudinary
+          const cloudRes = await fetch("https://api.cloudinary.com/v1_1/dhgjjux80/image/upload", {
+            method: "POST",
+            body: formData,
+          });
+          if (!cloudRes.ok) {
+            const errText = await cloudRes.text();
+            throw new Error(`Cloudinary failed: ${cloudRes.status} ${errText}`);
+          }
       
+          const data = await cloudRes.json();
+          if (!data.secure_url || !data.public_id) {
+            throw new Error("Cloudinary did not return secure_url or public_id");
+          }
+      
+          // Save to backend
           const res = await api.post("/gallery/upload", {
             url: data.secure_url,
             public_id: data.public_id,
-            caption: caption,
+            caption,
           });
       
-          setImages([...images, res.data]);
+          setImages((prev) => [res.data, ...prev]);
           setFile(null);
           setCaption("");
         } catch (err) {
           console.error("Upload error:", err);
+          alert(`Upload failed: ${err.message}`);
         }
       };
+      
       
 
     const handleDelete = async (publicId) => {
