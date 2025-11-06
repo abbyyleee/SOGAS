@@ -25,6 +25,17 @@ const ALLOWED_ORIGINS = [
   "https://www.sogasservices.com",
   "https://sogasservices.com",
 ];
+const corsOptions = {
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true); // allow server-to-server, curl, health checks
+    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    return cb(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 204,
+}
 const EMAIL_TO = process.env.EMAIL_TO; 
 
 // --- Guards ---
@@ -32,16 +43,10 @@ if (!EMAIL_TO) console.warn("[WARN] EMAIL_TO is not set in .env");
 
 // --- Middleware ---
 app.use(helmet());
-app.use(cors({
-    origin: (origin, cb) => {
-      if (!origin) return cb(null, true);
-      if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-      return cb(new Error("Not allowed by CORS"));
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
-  })
-);
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
 app.use(express.json({ limit: "50kb" }));
 
 // --- Routes ---
