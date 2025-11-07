@@ -17,7 +17,7 @@ export default function InviteAdmin() {
         try {
           const token = localStorage.getItem("token");
           await api.post(
-            "/auth/invite",
+            "auth/invite",
             { email },
             { headers: { Authorization: `Bearer ${token}` } }
           );
