@@ -1,5 +1,6 @@
 // InviteAdmin.jsx
 import { useState } from "react";
+import api from "../../lib/api";
 
 export default function InviteAdmin() {
     const [email, setEmail] = useState("");
@@ -12,36 +13,28 @@ export default function InviteAdmin() {
         setMessage("");
         setError("");
         setLoading(true);
-
+      
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${import.meta.env.VITE_API_BASE}api/auth/invite`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ email })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                setError(data.error || "Something went wrong.");
-
-            } else {
-                setMessage("Invite sent successfully.");
-                setEmail("");
-            }
-
+          const token = localStorage.getItem("token");
+          await api.post(
+            "/auth/invite",
+            { email },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+      
+          setMessage("Invite sent successfully.");
+          setEmail("");
         } catch (err) {
-            console.error(err);
-            setError("Error sending invite.");
-
+          console.error(err);
+          const msg =
+            err?.response?.data?.error ||
+            err?.response?.data?.message ||
+            "Error sending invite.";
+          setError(msg);
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
-    }
+      }
 
     return (
         <div className="bg-light-blue rounded-xl p-12 mb-8">
@@ -66,11 +59,11 @@ export default function InviteAdmin() {
             </form>
 
             {message && (
-                <p className="text-green-400 mt-3 font-medium">{message}</p>
+                <p className="text-green-400 mt-3 font-semibold">{message}</p>
             )}
 
             {error && (
-                <p className="text-red-400 mt-3 font-medium">{error}</p>
+                <p className="text-red-400 mt-3 font-semibold">{error}</p>
             )}
         </div>
     );
