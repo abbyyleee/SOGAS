@@ -59,11 +59,11 @@ export default function InviteAdmin() {
             </form>
 
             {message && (
-                <p className="text-green-400 mt-3 font-semibold">{message}</p>
+                <p className="text-green-500 mt-3 font-semibold">{message}</p>
             )}
 
             {error && (
-                <p className="text-red-400 mt-3 font-semibold">{error}</p>
+                <p className="text-red-500 mt-3 font-semibold">{error}</p>
             )}
         </div>
     );
