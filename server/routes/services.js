@@ -29,7 +29,7 @@ router.get("/active", async (req, res) => {
 });
 
 // POST a new service
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/", async (req, res) => {
   const { title, description, status } = req.body;
   try {
     const [newService] = await sql`
@@ -45,7 +45,7 @@ router.post("/", authMiddleware, async (req, res) => {
 });
 
 // PUT (edit) a service
-router.put("/:id", authMiddleware, async (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { title, description, status } = req.body;
 
@@ -64,7 +64,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
 });
 
 // DELETE a service
-router.delete("/:id", authMiddleware, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     await sql`DELETE FROM services WHERE id = ${id}`;
