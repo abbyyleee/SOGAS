@@ -1,26 +1,18 @@
 // server/db/database.js
 import postgres from "postgres";
-import dns from "node:dns/promises";
 
 const raw = process.env.DATABASE_URL;
 if (!raw) throw new Error("DATABASE_URL is not set");
 
 const url = new URL(raw);
 
-// IPv4 resolve
-let host = url.hostname;
-try {
-  const A = await dns.resolve4(url.hostname);
-  if (A?.length) host = A[0];
-} catch {}
-
-
-const parsedPort = Number(url.port || 5432);
-const port = parsedPort === 6543 ? 5432 : parsedPort;
+// Use the hostname exactly as provided in DATABASE_URL.
+// Do NOT resolve to an IP; Render's internal hostnames must remain as hostnames.
+const host = url.hostname;
+const port = Number(url.port || 5432);
 
 console.log("[DB TARGET]", {
-  originalHost: url.hostname,
-  chosenHost: host,
+  host,
   port,
   database: url.pathname.slice(1),
   user: decodeURIComponent(url.username),
