@@ -7,6 +7,7 @@ import NavBar from "./components/NavBar.jsx";
 import Home from "./components/Home.jsx";
 import Gallery from "./components/Gallery.jsx";
 import Footer from "./components/Footer.jsx";
+import api from "./lib/api.js";
 
 // Admin
 import Admin from "./components/admin/Admin.jsx";
@@ -16,10 +17,17 @@ import ManageInfo from "./components/admin/ManageInfo.jsx";
 import AdminLogin from "./components/admin/AdminLogin.jsx";
 import ProtectedRoute from "./components/admin/ProtectedRoute.jsx";
 import AdminRegister from "./components/admin/AdminRegister.jsx";
+import { useEffect } from "react";
 
 
 //App Page
 export default function App() {
+
+  // Warm up the backend once on app load
+  useEffect(() => {
+    api.get("health").catch(() => {});
+  }, []);
+  
   return (
     <Router>
       <div className="flex flex-col min-h-screen">

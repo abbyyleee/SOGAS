@@ -13,6 +13,7 @@ import galleryRoutes from "../routes/gallery.js";
 import infoRoutes from "../routes/info.js";
 import siteVisitsRoutes from "../routes/site_visits.js";
 import authRoutes from "../routes/auth.js";
+import healthRouter from "../routes/health.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const app = express();
@@ -56,6 +57,7 @@ app.use("/api/gallery", galleryRoutes);
 app.use("/api/info", infoRoutes);
 app.use("/api/site_visits", siteVisitsRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/health", healthRouter);
 
 
 // --- Contact endpoint ---
