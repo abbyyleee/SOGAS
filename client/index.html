@@ -2,11 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/sogas-logo.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+    <!-- Favicon / tab icon -->
+    <link rel="icon" type="image/png" href="/sogas-logo.png" />
+  
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  
+    <!-- Primary SEO -->
     <title>Southern Gas Services</title>
-
+    <meta name="title" content="Southern Gas Services" />
+    <meta name="description" content="Southern Gas Services supplies reliable natural gas solutions across Louisiana — trusted, proven, on time." />
+    <link rel="canonical" href="https://www.sogasservices.com/" />
+  
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.sogasservices.com/" />
+    <meta property="og:title" content="Southern Gas Services" />
+    <meta property="og:description" content="Reliable natural gas solutions across Louisiana — trusted, proven, on time." />
+    <meta property="og:image" content="https://www.sogasservices.com/sogas-og.jpg" />
+  
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Southern Gas Services" />
+    <meta name="twitter:description" content="Reliable natural gas solutions across Louisiana — trusted, proven, on time." />
+    <meta name="twitter:image" content="https://www.sogasservices.com/sogas-og.jpg" />
+  
+    <!-- Original Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Southern Gas Services",
+      "url": "https://www.sogasservices.com/",
+      "logo": "https://www.sogasservices.com/sogas-logo.png"
+    }
+    </script>
+  
+    <!-- Signature font -->
     <style>
       @font-face {
         font-family:'SignatureFont';
@@ -15,8 +49,8 @@
         font-style: normal;
       }
     </style>
-
-    <!--Custom Tailwind Colors-->
+  
+    <!-- Tailwind CDN + custom config -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -24,7 +58,7 @@
           extend: {
             colors: {
               'cobalt-blue': '#0047AB',
-              'gray'       : '#e5e4e2',
+              'gray': '#e5e4e2',
               'stone-gray': '#d3d3d3',
               'deep-gray': '#7D7C7C',
               'pure-black': '#000000',
@@ -34,26 +68,13 @@
               'reg-blue': '#005b96',
               'soft-blue': '#6497b1',
               'light-blue': '#b3cde0',
-              'rust':       '#FFDE00',
-             
+              'rust': '#FFDE00',
             },
             keyframes: {
-              fadeUp: {
-                '0%': { opacity: '0', transform: 'translateY(20px)'},
-                '100%': { opacity: '1', transform: 'translateY(0)'},
-              },
-              fadeLeft: {
-                '0%': { opacity: '0', transform: 'translateX(-50px)' },
-                '100%': { opacity: '1', transform: 'translateX(0)' },
-              },
-              fadeRight: {
-                '0%': { opacity: '0', transform: 'translateX(50px)' },
-                '100%': { opacity: '1', transform: 'translateX(0)' },
-              },
-              zoomIn: {
-                '0%': { transform: 'scale(0.9)' },
-                '100%': { transform: 'scale(1)' },
-              },
+              fadeUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+              fadeLeft: { '0%': { opacity: '0', transform: 'translateX(-50px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+              fadeRight: { '0%': { opacity: '0', transform: 'translateX(50px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+              zoomIn: { '0%': { transform: 'scale(0.9)' }, '100%': { transform: 'scale(1)' } },
             },
             animation: {
               'fade-up': 'fadeUp 2s ease-out forwards',
@@ -61,15 +82,13 @@
               'fade-right': 'fadeRight 1.2s ease-out forwards',
               'zoom-in': 'zoomIn 3s ease-out forwards',
             },
-            fontFamily: {
-              signature: ['SignatureFont', 'cursive'],
-            },
+            fontFamily: { signature: ['SignatureFont', 'cursive'] },
           },
         },
       };
     </script>
-
   </head>
+  
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
