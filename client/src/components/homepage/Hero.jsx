@@ -47,7 +47,12 @@ export default function Hero() {
             </div>
 
             {/* Hero Content */}
-            <div className="relative z-10 text-center max-w-4xl px-6 md:px-12 animate-fade-up">
+            <div className="relative z-10 text-center max-w-4xl px-6 md:px-12 animate-fade-up"
+                 style={{
+                    animationDuration: "0.45s",
+                    animationTimingFunction: "ease-out",
+                  }}>
+                    
                 <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.75)] mb-6">
                     Welcome to <br />
                     Southern Gas Services

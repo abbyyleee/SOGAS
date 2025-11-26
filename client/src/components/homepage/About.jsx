@@ -47,7 +47,7 @@ export default function About() {
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
           viewport={{ once: true, amount: 0.3 }}
           className="space-y-6"
         >
@@ -77,9 +77,9 @@ export default function About() {
 
         {/* RIGHT: Image */}
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.3 }}
           className="overflow-hidden rounded-2xl shadow-xl"
         >
@@ -87,23 +87,24 @@ export default function About() {
             src="/images/white-blue-pipe.JPG"
             alt="Industrial pipeline infrastructure"
             className="w-full h-full object-cover transition-transform ease-in-out hover:scale-105"
-            style={{ transitionDuration: "1000ms" }}
+            style={{ transitionDuration: "700ms" }}
+            loading="lazy"
           />
         </motion.div>
       </div>
 
       {/* STATS SECTION */}
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.6 }}
         viewport={{ once: true, amount: 0.3 }}
         className="max-w-screen-xl mx-auto mt-6 mb-20 grid grid-cols-2 sm:grid-cols-4 gap-6 px-6 text-white z-10 relative"
       >
-        <StatCard end={30} suffix="+" label="Years in Business" duration={2.5} />
-        <StatCard end={50} suffix="+" label="Pipeline Facilities" duration={2.5} />
-        <StatCard end={100} suffix="%" label="Client Satisfaction" duration={2.5} />
-        <StatCard end={0} suffix="" label="Major Safety Incidents" duration={2.5} />
+        <StatCard end={30} suffix="+" label="Years in Business" duration={1.8} />
+        <StatCard end={50} suffix="+" label="Pipeline Facilities" duration={1.8} />
+        <StatCard end={100} suffix="%" label="Client Satisfaction" duration={1.8} />
+        <StatCard end={0} suffix="" label="Major Safety Incidents" duration={1.8} />
       </motion.div>
 
       {/* BOTTOM DIAGONAL DIVIDER */}

@@ -33,13 +33,13 @@ export default function Services() {
   }, [inView, controls]);
 
   const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 32 },
     visible: (i) => ({
       opacity: 1,
       y: 0,
       transition: {
-        delay: i * 0.2,
-        duration: 0.6,
+        delay: i * 0.12,
+        duration: 0.45,
         ease: "easeOut",
       },
     }),

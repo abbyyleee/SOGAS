@@ -6,17 +6,17 @@ import { motion, useInView } from "framer-motion";
 const container = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.12, delayChildren: 0.08 },
   },
 };
 
 const card = {
-  hidden: { opacity: 0, y: 28, scale: 0.98 },
+  hidden: { opacity: 0, y: 24, scale: 0.98 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { type: "spring", stiffness: 120, damping: 18 },
+    transition: { type: "spring", stiffness: 110, damping: 20 },
   },
 };
 
@@ -46,7 +46,7 @@ export default function Pipe({
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.45 }}
           className="mb-10"
         >
           <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
@@ -73,7 +73,7 @@ export default function Pipe({
                 y: -6,
                 rotateX: 2,
                 rotateY: -2,
-                transition: { type: "spring", stiffness: 180, damping: 15 },
+                transition: { type: "spring", stiffness: 160, damping: 18 },
               }}
             >
               {/* Image */}
@@ -81,7 +81,7 @@ export default function Pipe({
                 <img
                   src={src}
                   alt={`Gallery ${idx + 1}`}
-                  className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-[700ms] group-hover:scale-105"
                   loading="lazy"
                 />
                 

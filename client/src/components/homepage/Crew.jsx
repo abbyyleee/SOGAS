@@ -6,7 +6,7 @@ import { motion, useInView } from "framer-motion";
 const container = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.18, delayChildren: 0.15 },
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
   },
 };
 
@@ -18,8 +18,8 @@ const card = (index) => ({
     scale: 1,
     transition: {
       type: "spring",
-      stiffness: 140,
-      damping: 18,
+      stiffness: 120,
+      damping: 20,
       mass: 0.6,
     },
   },
@@ -54,7 +54,7 @@ export default function Crew({
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.45 }}
           className="mb-10"
         >
           <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
@@ -77,17 +77,17 @@ export default function Crew({
               variants={card(idx)}
               className="group relative rounded-2xl overflow-hidden bg-dark-navy/60 border border-light-blue/20 shadow-xl"
               whileHover={{
-                y: -8,
-                rotateX: -1.5,
-                rotateY: 2,
-                transition: { type: "spring", stiffness: 180, damping: 16 },
+                y: -5,
+                rotateX: -1,
+                rotateY: 1.5,
+                transition: { type: "spring", stiffness: 150, damping: 18 },
               }}
             >
               <div className="relative overflow-hidden aspect-[4/3]">
                 <img
                   src={src}
                   alt={`Crew ${idx + 1}`}
-                  className="h-full w-full object-cover transition-transform duration-[1300ms] group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-[700ms] group-hover:scale-105"
                   loading="lazy"
                 />
                 <div className="pointer-events-none absolute right-0 top-0 h-16 w-16 bg-gradient-to-bl from-reg-blue/30 to-transparent" />

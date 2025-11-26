@@ -5,7 +5,7 @@ import { useInView, useAnimation, motion } from "framer-motion";
 
 export default function Mission() {
   const ref = useRef(null);
-  const inView = useInView(ref, { threshold: 0.9, once: true });
+  const inView = useInView(ref, { threshold: 0.3, once: true });
 
   const titleControls = useAnimation();
   const textControls = useAnimation();
@@ -62,7 +62,7 @@ export default function Mission() {
               animate={accentControls}
               variants={{
                 hidden: { width: 0, opacity: 0 },
-                visible: { width: "60px", opacity: 1, transition: { duration: 0.8 } },
+                visible: { width: "60px", opacity: 1, transition: { duration: 0.5 } },
               }}
               className="h-[4px] bg-rust mb-4 rounded-full"
             />
@@ -72,7 +72,7 @@ export default function Mission() {
               animate={titleControls}
               variants={{
                 hidden: { opacity: 0, y: -30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 1 } },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
               }}
               className="text-sm font-semibold text-deep-blue uppercase mb-2"
             >
@@ -84,7 +84,7 @@ export default function Mission() {
               animate={titleControls}
               variants={{
                 hidden: { opacity: 0, scale: 0.95 },
-                visible: { opacity: 1, scale: 1, transition: { duration: 1, delay: 0.2 } },
+                visible: { opacity: 1, scale: 1, transition: { duration: 0.6, delay: 0.1 } },
               }}
               className="text-3xl md:text-4xl font-bold text-dark-navy mb-4"
             >
@@ -96,7 +96,7 @@ export default function Mission() {
               animate={textControls}
               variants={{
                 hidden: { opacity: 0, x: -40 },
-                visible: { opacity: 1, x: 0, transition: { duration: 1, delay: 0.4 } },
+                visible: { opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.2 } },
               }}
               className="text-dark-navy font-semibold mb-6 max-w-xl"
             >
@@ -111,7 +111,7 @@ export default function Mission() {
               animate={buttonControls}
               variants={{
                 hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.6 } },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.3 } },
               }}
               className="bg-rust text-dark-navy hover:text-dark-navy font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition duration-300 hover:scale-105"
             >
@@ -123,7 +123,7 @@ export default function Mission() {
               animate={textControls}
               variants={{
                 hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 1, delay: 0.8 } },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.35 } },
               }}
               className="mt-8"
             >
@@ -143,7 +143,7 @@ export default function Mission() {
                 opacity: 1,
                 scale: 1,
                 rotate: 0,
-                transition: { duration: 1.2, delay: 0.3 },
+                transition: { duration: 0.7, delay: 0.2 },
               },
             }}
             className="flex-1"
@@ -153,6 +153,7 @@ export default function Mission() {
                 src="/images/workers-dark.JPG"
                 alt="Oil and Gas Operator"
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </div>
           </motion.div>
