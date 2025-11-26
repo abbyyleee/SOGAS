@@ -2,15 +2,27 @@
 
 import { useEffect, useState } from "react";
 
+const DEFAULT_TAGLINE = 
+"SOGAS provides dependable natural gas solutions across the Gulf Coast with a reputation built on service, safety, and trust."
+
 export default function Hero() {
-    const [tagline, setTagline] = useState("");
+    const [tagline, setTagline] = useState(DEFAULT_TAGLINE);
 
     useEffect(() => {
         async function fetchTagline() {
             try {
                 const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/info`);
+
+                if (!res.ok) {
+                    throw new Error(`failed to fetch tagling: ${res.status}`);
+                }
+
                 const data = await res.json();
-                setTagline(data.tagline || "");
+                
+                if (data && data.tagline) {
+                    setTagline(data.tagline);
+                }
+
             } catch (error) {
                 console.error("Failed to fetch tagline:", error);
             }
@@ -41,7 +53,7 @@ export default function Hero() {
                     Southern Gas Services
                 </h1>
                 <p className="text-lg md:text-2xl text-white font-bold mb-8 leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
-                    {tagline || "Loading..."}
+                    {tagline}
                 </p>
             </div>
         </section>
