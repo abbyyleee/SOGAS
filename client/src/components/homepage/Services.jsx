@@ -4,8 +4,52 @@ import { useEffect, useState, useRef } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import api from "../../lib/api";
 
+// Default services so the section is never empty
+const DEFAULT_SERVICES = [
+  {
+    id: 1,
+    title: "Natural Gas Pipeline",
+    description:
+      "Installation of natural gas pipelines for industrial, midstream, and utility clients.",
+    status: "active",
+  },
+  {
+    id: 2,
+    title: "Natural Gas Marketing",
+    description:
+      "Provides natural gas energy solutions to end-users as well as producers of oil and gas.",
+    status: "active",
+  },
+  {
+    id: 3,
+    title: "Natural Gas Consulting",
+    description:
+      "Custom natural gas solutions for infrastructure, planning, system upgrades, and supply pricing options.",
+    status: "active",
+  },
+  {
+    id: 4,
+    title: "Operation / Maintenance",
+    description: "Operation and maintenance options for proposals and existing natural gas facilities.",
+    status: "active",
+  },
+  {
+    id: 5,
+    title: "Regulatory Compliance",
+    description: "Full regulatory compliance on proposals and existing gas facilities.",
+    status: "active",
+  },
+  {
+    id: 6,
+    title: "Facility Fabrication / Installation",
+    description: "Fabrication and installation of natural gas facilities.",
+    status: "active",
+  },
+];
+
 export default function Services() {
-  const [services, setServices] = useState([]);
+  // Start with defaults
+  const [services, setServices] = useState(DEFAULT_SERVICES);
 
   const ref = useRef(null);
   const inView = useInView(ref, { threshold: 0.9, once: true });
@@ -15,14 +59,26 @@ export default function Services() {
     async function fetchServices() {
       try {
         const res = await api.get("/services");
-        const activeServices = res.data.filter(
-          (service) => service.status.toLowerCase() === "active"
-        );
-        setServices(activeServices);
+        const data = res?.data;
+
+        if (Array.isArray(data) && data.length > 0) {
+          const activeServices = data.filter((service) => {
+            const status = (service.status || "").toLowerCase();
+            return status === "active";
+          });
+
+          // Only override defaults if we actually have active services
+          if (activeServices.length > 0) {
+            setServices(activeServices);
+          }
+        }
       } catch (error) {
         console.error("Error fetching services:", error);
+        // IMPORTANT: don't set services to [] here
+        // We keep DEFAULT_SERVICES so the UI never goes blank
       }
     }
+
     fetchServices();
   }, []);
 
@@ -62,13 +118,12 @@ export default function Services() {
           Southern Gas Services provides a full range of industrial-grade gas solutions with safety, efficiency, and precision at the forefront.
         </p>
 
-
         <div ref={ref} className="h-1 w-full"></div>
 
         <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => (
             <motion.div
-              key={index}
+              key={service.id || index}
               custom={index}
               initial="hidden"
               animate={controls}
