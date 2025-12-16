@@ -1,133 +1,151 @@
-# Southern Gas Services (SOGAS)
+# Project SOGAS — Southern Gas Services Website + Admin Dashboard
 
-My first solo full-stack web project for **Southern Gas Services**: React frontend (Vite + Tailwind) and Node/Express backend
-that handles contact form submissions and sends emails to the comapany inbox.
+A production-ready full-stack application built for **Southern Gas Services**. It combines a modern React frontend (Vite + Tailwind) with a Node/Express API, Supabase (Postgres) database, and Resend email service to power a public marketing site and a secure admin dashboard for managing site content, gallery images, and contact submissions.
 
 ## Overview
 
-- **Frontend (`client/`)**: Vite + React + Tailwind (via CDN), Framer Motion for animated effects.
-- **Backend (`server/`)**: Node.js + Express w/ validation, CORS, Rate Limiting, and Email Delivery (SMTP/Nodemailer).
-- **Goal**: A fast, well organized, professional site with a working contact form that delivers to company email: `notices@sogasservices.com`.
+- **Frontend (`client/`)**: Vite + React + Tailwind (via CDN) with a custom blue theme, plus Framer Motion for smooth, production-quality animations.
+- **Backend (`server/`)**: Node.js + Express REST API with validation, CORS, rate limiting, health checks, and admin-protected routes.
+- **Data & Storage**: Supabase (Postgres) for persistent storage of site content, gallery images/metadata, and contact submissions.
+- **Email Delivery**: Resend for sending contact form notifications to the Southern Gas Services inbox.
+- **Goal**: A real-world, production-ready marketing site and a user-friendly admin dashboard that the company can use to manage content, gallery media, and customer inquiries without touching the codebase.
 
 ## Project Structure
 
-SOGAS/<br/>
-└─ southern-gas-services/<br/>
-├─ client/ # Frontend (Vite + React)<br/>
-├─ server/ # Backend (Node + Express)<br/>
-├─ .gitignore<br/>
-├─ LICENSE<br/>
-└─ README.md
+```txt
+southern-gas-services/
+├── client/           # Frontend (Vite + React + Tailwind + Framer Motion)
+├── server/           # Backend (Node + Express REST API)
+├── .gitignore        # Git ignore rules (node_modules, env files, build output, etc.)
+├── LICENSE           # Project license and ownership terms
+└── README.md         # Project documentation (this file)
+```
 
 ## Local Development
 
-**1. Frontend:**<br/>
+**1. Frontend (`client/`):**<br/>
 cd client<br/>
 npm install<br/>
-npm run dev
+npm run dev<br/>
+- Starts Vite dev server (default: http://localhost:5173)
 
-- Opens Vite dev server (default: http://sogas-backend.onrender.comlocalhost:5173)
-
-**2. Backend:**<br/>
+**2. Backend (`server/`):**<br/>
 cd server<br/>
 npm install<br/>
-npm start<br/>
+npm run dev<br/>
+- Starts Express API server (default: http://localhost:5000, or whatever `PORT` is set to in your `.env`)
 
-- Starts Express server
 
 ## Environment Variables (Backend)
 
 Create a `.env` file inside `server/` with the following keys.  
-**Use your own secure values** — These are example placeholders.
+**Use your own secure values** — the values below are examples and should be replaced with your real secrets locally.
 
-## Server
-
-PORT=4000<br/>
+**Server**<br/>
+PORT=3000<br/>
 NODE_ENV=development<br/>
 
-## CORS (Frontend Origin)
+**CORS / Frontend Origin**<br/>
+CORS_ORIGIN=http://localhost:5173<br/>
 
-CORS_ORIGIN=http://sogas-backend.onrender.comlocalhost:5173
-
-## Email Routing (Placeholder)
-
-EMAIL_TO=you@yourdomain.com<br/>
-EMAIL_FROM="Your Website" <no-reply@yourdomain.com>
-
-## SMTP (Email Provider)
-
-SMTP_HOST=smtp.your-email-provider.com <br/>
+**Email (IONOS SMTP)**<br/>
+SMTP_HOST=smtp.ionos.com<br/>
 SMTP_PORT=587<br/>
-SMTP_USER=your_smtp_username<br/>
-SMTP_PASS=your_smtp_password
+SMTP_SECURE=false<br/>
+SMTP_USER=notices@sogasservices.com<br/>
+SMTP_PASS=your_smtp_password_here<br/>
 
-## Basic rate limit
+**Email (Resend + routing)**<br/>
+RESEND_API_KEY=your_resend_api_key_here<br/>
+EMAIL_FROM=SOGAS Website <notices@sogasservices.com><br/>
+CONTACT_TO=notices@sogasservices.com<br/>
+CONTACT_FROM=SOGAS Website <notices@sogasservices.com><br/>
 
-RATE_LIMIT_WINDOW_MS=60000<br/>
-RATE_LIMIT_MAX=5
+**Cloudinary (media storage)**<br/>
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name_here<br/>
+CLOUDINARY_API_KEY=your_cloudinary_api_key_here<br/>
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret_here<br/>
+
+**Database (Supabase / Postgres)**<br/>
+DATABASE_URL=postgresql://your_user:your_password@your-host:your-port/your-db-name<br/>
+
+**Auth**<br/>
+JWT_SECRET=your_jwt_secret_here<br/>
 
 ## Contact Form API
 
-Endpoint: POST /api/contact<br/>
-Content-Type: application/json
+Endpoint: `POST /api/contact`<br/>
+Content-Type: `application/json`
 
-Request Body:<br/>
+**Request Body**<br/>
 {<br/>
-"name": "Your Name", // required, 1–100 chars<br/>
-"email": "you@example.com", // required, valid email format<br/>
-"message": "Your message here", // required, 1–5000 chars<br/>
-"company": "Optional Co", // optional, up to 150 chars<br/>
-"phone": "optional", // optional, up to 30 chars<br/>
-"subject": "optional" // optional, up to 150 chars<br/>
+&nbsp;&nbsp;"name": "Your Name", &nbsp;// required, 1–100 chars<br/>
+&nbsp;&nbsp;"email": "you@example.com", &nbsp;// required, valid email format<br/>
+&nbsp;&nbsp;"message": "Your message here", &nbsp;// required, 1–5000 chars<br/>
+&nbsp;&nbsp;"company": "Optional Co", &nbsp;// optional, up to 150 chars<br/>
+&nbsp;&nbsp;"phone": "optional", &nbsp;// optional, up to 30 chars<br/>
+&nbsp;&nbsp;"subject": "optional" &nbsp;// optional, up to 150 chars<br/>
 }
 
-Success (200)<br/>
+**Behavior**<br/>
+- Validates the request body (required fields, lengths, and formats).<br/>
+- Enforces rate limiting based on `RATE_LIMIT_WINDOW_MS` and `RATE_LIMIT_MAX`.<br/>
+- Sends a notification email to `CONTACT_TO` using the configured email provider (Resend / SMTP).<br/>
+- (Optionally) Stores the submission in the database for viewing in the admin dashboard, depending on the current deployment configuration.<br/>
+
+**Success (200)**<br/>
 { "success": true, "message": "Your message has been sent." }
 
-Validation Error (400)<br/>
+**Validation Error (400)**<br/>
 {<br/>
-"success": false,<br/>
-"errors": {<br/>
-"name": "Name is required",<br/>
-"email": "Please enter a valid email",<br/>
-"message": "Message is required"}<br/>
+&nbsp;&nbsp;"success": false,<br/>
+&nbsp;&nbsp;"errors": {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;"name": "Name is required",<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;"email": "Please enter a valid email",<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;"message": "Message is required"<br/>
+&nbsp;&nbsp;}<br/>
 }
 
-Rate Limited (429)<br/>
+**Rate Limited (429)**<br/>
 { "success": false, "message": "Too many requests. Please try again later." }
 
-Server Error (500)<br/>
+**Server Error (500)**<br/>
 { "success": false, "message": "Unable to send your message right now. Please try again later." }
 
 ## Tech Stack
 
-- Frontend: React + Vite + Tailwind (CDN) + Framer Motion
-- Backend: Node.js + Express + Nodemailer + express-rate-limit + CORS + validation
-- Tooling: Git + GitHub
+- **Frontend:** React + Vite + Tailwind (CDN) + Framer Motion  
+- **Backend:** Node.js + Express (REST API) + validation + CORS + express-rate-limit  
+- **Database:** Supabase (Postgres), connected via `DATABASE_URL`  
+- **Email:** Resend (primary) and IONOS SMTP (historical/backup configuration)  
+- **Media Storage:** Cloudinary for hosting gallery images (URL + metadata stored in the database)  
+- **Tooling:** Git + GitHub, environment-based configuration with `.env` files (not committed)
+
 
 ## Scripts
 
-**Frontend (client):**<br/>
-npm run dev - starts Vite dev server<br/>
-npm run build - production build</br>
-npm run preview - preview production build
+**Frontend (`client/`):**<br/>
+npm run dev - start Vite dev server (development)<br/>
+npm run build - create optimized production build<br/>
+npm run preview - preview the production build locally<br/>
 
-**Backend (server):**<br/>
-npm start - starts Express server<br/>
-npm run dev - start with nodemon
+**Backend (`server/`):**<br/>
+npm run dev - start Express server in development mode (e.g., with nodemon)<br/>
+npm start - start Express server in production mode<br/>
 
 ## License
 
 © 2025 Abby Lee. All rights reserved.<br/>
-This software is the intellectual property of Abby Lee and is licensed for use by Southern Gas Services.
+This software is the intellectual property of Abby Lee and is licensed for use by Southern Gas Services.<br/>
 No part of this repository may be copied, modified, or distributed without explicit written permission from the copyright holder.
 
 ## Contact
 
-For project inquiries or licensing requests, contact:
-
+For project inquiries or licensing requests, contact:<br/><br/>
 Abby Lee<br/>
 Email: abbychrislee@gmail.com<br/>
-GitHub: http://sogas-backend.onrender.comgithub.com/abbyyleee
+GitHub: https://github.com/abbyyleee<br/>
 
-For Southern Gas Services business inquiries: notices@sogasservices.com
+For Southern Gas Services business inquiries:<br/>
+notices@sogasservices.com
+
