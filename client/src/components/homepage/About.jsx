@@ -103,8 +103,6 @@ export default function About() {
       >
         <StatCard end={30} suffix="+" label="Years in Business" duration={1.8} />
         <StatCard end={50} suffix="+" label="Pipeline Facilities" duration={1.8} />
-        <StatCard end={100} suffix="%" label="Client Satisfaction" duration={1.8} />
-        <StatCard end={0} suffix="" label="Major Safety Incidents" duration={1.8} />
       </motion.div>
 
       {/* BOTTOM DIAGONAL DIVIDER */}
