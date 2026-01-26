@@ -177,7 +177,8 @@ export default function Contact() {
               </InfoItem>
 
               <InfoItem
-                title="EMERGENCY"
+                title="EMERGENCY CONTACT"
+                titleClassName="text-red-700"
                 icon={
                 <svg
                   className="h-5 w-5 text-red-600"
@@ -191,7 +192,7 @@ export default function Contact() {
                 >
                 <a
                   href="tel:18442432819"
-                  className="font-extrabold text-red-700 hover:underline"
+                  className="font-extrabold text-red-700"
                 >
                   1-844-243-2819
                 </a>
@@ -358,14 +359,14 @@ function Textarea({ id, name, label, placeholder, rows = 5, value, onChange, req
   );
 }
 
-function InfoItem({ title, icon, children }) {
+function InfoItem({ title, icon, children, titleClassName = "text-dark-navy" }) {
   return (
     <li className="flex items-start gap-4">
       <span className="mt-1 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/70 text-dark-navy">
         {icon}
       </span>
       <div>
-        <h4 className="font-extrabold text-dark-navy">{title}</h4>
+        <h4 className={"font-extrabold " + titleClassName}>{title}</h4>
         <p className="text-dark-navy">{children}</p>
       </div>
     </li>
