@@ -90,11 +90,6 @@ export default function Pipe({
                 </div>
               </div>
 
-              {/* Footer strip */}
-              <div className="flex items-center justify-between px-4 py-3 bg-dark-navy/60 backdrop-blur-sm border-t border-light-blue/10">
-                <span className="text-sm text-light-blue/90">SOGAS</span>
-              </div>
-
               {/* Glow ring */}
               <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-light-blue/20 group-hover:ring-reg-blue/30 transition-all duration-300" />
               <div className="pointer-events-none absolute inset-0 rounded-2xl shadow-[0_0_40px_0_rgba(100,151,177,0.15)] group-hover:shadow-[0_0_60px_0_rgba(0,91,150,0.25)] transition-shadow duration-300" />
