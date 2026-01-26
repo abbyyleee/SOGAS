@@ -175,6 +175,22 @@ export default function Contact() {
               >
                 {siteInfo.phone ? formatPhoneForDisplay(siteInfo.phone) : "(318) 355-4443"}
               </InfoItem>
+
+              <InfoItem
+                title="EMERGENCY"
+                icon={
+                  <svg classname="h-5 w-5 text-red-600" viewbox="0 0 24 24" fill="current color">
+                    <path d="M12 2 1 21h22L12 2Zm0 14.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM11 10a1 1 0 1 1 2 0v4a1 1 0 1 1-2 0v-4Z" />
+                  </svg>
+                }
+                >
+                  <a 
+                    href="tel:1-844-243-2819"
+                    className="font-extrabold text-red-700 hover:underline"
+                  ></a>  
+            </InfoItem>
+
+            
             </ul>
           </div>
         </div>
